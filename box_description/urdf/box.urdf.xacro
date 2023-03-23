@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<robot name="box" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:property name="box_len_x" value="0.25" />
+<xacro:property name="box_len_y" value="0.15" />
+<xacro:property name="box_len_z" value="0.08" />
+
+<xacro:property name="box_origin_from_corner" value="${box_len_x/2-0.05} ${box_len_y/2-0.05} ${box_len_z/2}" />
+
+<link name="box_base_link">
+
+</link>
+
+<joint name="box_center_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_center_link"/>
+  <origin rpy="0 0 0" xyz="${box_origin_from_corner}"/>
+</joint>
+<link name="box_center_link">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://box_urdf/meshes/box.stl"/>
+    </geometry>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <box size="${box_len_y} ${box_len_x} 0.08"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- Buttons -->
+
+<joint name="box_button_blue_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_button_blue"/>
+  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+</joint>
+<link name="box_button_blue">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.01" length="0.1"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_button_red_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_button_red"/>
+  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+</joint>
+<link name="box_button_red">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.01" length="0.1"/>
+    </geometry>
+  </visual>
+</link>
+
+<!-- Slider -->
+
+<joint name="box_slider_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_slider"/>
+  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+</joint>
+<link name="box_slider">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <box size="0.03 0.01 0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+<!--  -->
+
+</robot>
+
