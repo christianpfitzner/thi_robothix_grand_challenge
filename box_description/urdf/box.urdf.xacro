@@ -5,7 +5,7 @@
 <xacro:property name="box_len_y" value="0.15" />
 <xacro:property name="box_len_z" value="0.08" />
 
-<xacro:property name="box_origin_from_corner" value="${box_len_x/2-0.05} ${box_len_y/2-0.05} ${box_len_z/2}" />
+<xacro:property name="box_origin_from_corner" value="${box_len_x/2} ${box_len_y/2} ${box_len_z/2}" />
 
 <link name="box_base_link">
 
@@ -20,15 +20,77 @@
   <visual>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-      <mesh filename="package://box_urdf/meshes/box.stl"/>
+      <mesh filename="package://box_description/meshes/box.dae"/>
     </geometry>
   </visual>
   <collision>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-      <box size="${box_len_y} ${box_len_x} 0.08"/>
+      <box size="${box_len_x} ${box_len_y} ${box_len_z}"/>
     </geometry>
   </collision>
+</link>
+
+<!-- Box Corners -->
+
+<joint name="box_corner_1_joint" type="fixed">
+  <parent link="box_center_link"/>
+  <child link="box_corner_1"/>
+  <origin rpy="0 0 0" xyz="${box_len_x/2} ${box_len_y/2} 0"/>
+</joint>
+
+<link name="box_corner_1">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <sphere radius="0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_corner_2_joint" type="fixed">
+  <parent link="box_center_link"/>
+  <child link="box_corner_2"/>
+  <origin rpy="0 0 0" xyz="${-1 * box_len_x/2} ${box_len_y/2} 0"/>
+</joint>
+
+<link name="box_corner_2">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <sphere radius="0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_corner_3_joint" type="fixed">
+  <parent link="box_center_link"/>
+  <child link="box_corner_3"/>
+  <origin rpy="0 0 0" xyz="${box_len_x/2} ${-1 * box_len_y/2} 0"/>
+</joint>
+
+<link name="box_corner_3">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <sphere radius="0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_corner_4_joint" type="fixed">
+  <parent link="box_center_link"/>
+  <child link="box_corner_4"/>
+  <origin rpy="0 0 0" xyz="${-1 * box_len_x/2} ${-1 * box_len_y/2} 0"/>
+</joint>
+
+<link name="box_corner_4">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <sphere radius="0.01"/>
+    </geometry>
+  </visual>
 </link>
 
 <!-- Buttons -->
@@ -77,7 +139,83 @@
   </visual>
 </link>
 
-<!--  -->
+<!-- Sockets -->
+
+<joint name="box_socket_red_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_socket_red"/>
+  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+</joint>
+<link name="box_socket_red">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.01" length="0.1"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_socket_black_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_socket_black"/>
+  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+</joint>
+<link name="box_socket_black">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.01" length="0.1"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_socket_grey_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_socket_grey"/>
+  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+</joint>
+<link name="box_socket_grey">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.01" length="0.1"/>
+    </geometry>
+  </visual>
+</link>
+
+<!-- Clamping Strip -->
+
+<joint name="box_clamping_strip_1_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_clamping_strip_1"/>
+  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+</joint>
+<link name="box_clamping_strip_1">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <box size="0.01 0.01 0.1"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_clamping_strip_2_joint" type="fixed">
+  <parent link="box_base_link"/>
+  <child link="box_clamping_strip_2"/>
+  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+</joint>
+<link name="box_clamping_strip_2">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <box size="0.01 0.01 0.1"/>
+    </geometry>
+  </visual>
+</link>
+
+<!-- Display -->
+
+
 
 </robot>
 
