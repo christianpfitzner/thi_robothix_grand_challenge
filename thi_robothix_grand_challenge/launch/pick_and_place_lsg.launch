@@ -1,0 +1,20 @@
+
+
+<launch>
+
+
+    <!-- <node pkg="tf" type="static_transform_publisher" name="inspect_box" args="0.434 0.195 0.394 3.14 3.14 0 /panda_link0 /inspect_box 100"/>  -->
+
+        <!-- <node pkg="tf" type="static_transform_publisher" name="inspect_box" args="0.434 0.195 0.394 3.14 3.14 0 /panda_link0 /inspect_box 100"/>  -->
+    <node pkg="tf" type="static_transform_publisher" name="corner" args="0.629 -0.169 0.022 3.14 3.14 0 /panda_link0 /corner 100"/> 
+    <!-- <node pkg="tf" type="static_transform_publisher" name="inspect_box" args="0.535 0.020 0.129 3.14 3.14 0 /panda_link0 /pre_grasp 100"/>  -->
+    <node pkg="tf" type="static_transform_publisher" name="totmann"     args="0.47 -0.178 0.149 3.14 3.14 0 /panda_link0 /totmann     100"/> 
+
+    <node pkg="tf" type="static_transform_publisher" name="camera" args="0.192 0.549 0.453 0.741 0.498 0.325 -0.310 /panda_link0 /camera     100"/> 
+    <!-- <node pkg="tf" type="static_transform_publisher" name="place"     args="0.541 0.301 0.014 3.14 3.14 0 /panda_link0 /place     100"/>  -->
+
+
+    <node pkg="thi_robothix_grand_challenge_2023" type="pick_and_place_tutorial_lsg" name="pick_and_place" output="screen"/>
+
+
+</launch>

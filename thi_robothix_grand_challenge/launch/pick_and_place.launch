@@ -1,0 +1,11 @@
+
+
+<launch>
+
+
+    <node pkg="tf" type="static_transform_publisher" name="inspect_box" args="0.434 0.195 0.394 3.14 3.14 0 /panda_link0 /inspect_box 100"/> 
+
+    <node pkg="thi_robothix_grand_challenge_2023" type="pick_and_place_tutorial" name="pick_and_place" output="screen"/>
+
+
+</launch>
