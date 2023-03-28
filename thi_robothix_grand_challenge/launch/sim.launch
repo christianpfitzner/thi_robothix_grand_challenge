@@ -1,15 +1,13 @@
 <launch>
-
-<<<<<<< HEAD
-    <param name="box_description" command="$(find xacro)/xacro $(find box_description)/urdf/box.urdf.xacro"/>
     
-=======
     <!-- load box description -->
     <param name="box_description" command="$(find xacro)/xacro --inorder '$(find box_description)/urdf/box.urdf.xacro'" />
 
     <!-- static transform -->
-    <node pkg="tf" type="static_transform_publisher" name="world_to_box" args="0 0 0 0 0 0 world box_base_link 100" />
+    <node pkg="tf" type="static_transform_publisher" name="world_to_box" args="0.3 0.3 0 0 0 0 world box_base_link 100" />
     
+    <node pkg="tf" type="static_transform_publisher" name="tcp_transform_inv" args="0 0 0 0 3.14159265 0 panda_hand_tcp panda_hand_tcp_inv 100" />
+
     <!-- robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="box_state_publisher" output="screen">
         <param name="publish_frequency" value="50.0" />
@@ -17,10 +15,8 @@
         <remap from="joint_states" to="box_joint_states" />
     </node>
 
->>>>>>> 1d8d11a87962c800c3630388f317d890ee1aecd5
-    <include file="$(find panda_moveit_config)/launch/franka_control.launch" pass_all_args="true">
-        <arg name="robot_ip"        value="fci"/>
-        <arg name="load_gripper"    value="true"/>
+    <include file="$(find panda_moveit_config)/launch/demo.launch" pass_all_args="true">
+        <arg name="rviz_tutorial"        value="true"/>
     </include>
 
 </launch>

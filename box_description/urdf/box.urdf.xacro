@@ -20,18 +20,12 @@
   <visual>
     <origin rpy="0 0 0" xyz="-${box_len_x/2} -${box_len_y/2} -${box_len_z/2}"/>
     <geometry>
-      <mesh filename="file:///media/jos/ExternalSSD/thi_robothix_grand_challenge/box_description/meshes/box.dae" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://box_description/meshes/box.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="white">
       <color rgba="1 1 1 1"/>
     </material>
   </visual>
-  <collision>
-    <origin rpy="0 0 0" xyz="-${box_len_x/2} -${box_len_y/2} -${box_len_z/2}"/>
-    <geometry>
-      <box size="-${box_len_x/2} -${box_len_y/2} -${box_len_z/2}}"/>
-    </geometry>
-  </collision>
 </link>
 
 <!-- Box Corners -->
