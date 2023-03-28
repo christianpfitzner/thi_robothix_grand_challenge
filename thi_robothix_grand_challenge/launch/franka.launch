@@ -1,5 +1,9 @@
 <launch>
 
+<<<<<<< HEAD
+    <param name="box_description" command="$(find xacro)/xacro $(find box_description)/urdf/box.urdf.xacro"/>
+    
+=======
     <!-- load box description -->
     <param name="box_description" command="$(find xacro)/xacro --inorder '$(find box_description)/urdf/box.urdf.xacro'" />
 
@@ -13,6 +17,7 @@
         <remap from="joint_states" to="box_joint_states" />
     </node>
 
+>>>>>>> 1d8d11a87962c800c3630388f317d890ee1aecd5
     <include file="$(find panda_moveit_config)/launch/franka_control.launch" pass_all_args="true">
         <arg name="robot_ip"        value="fci"/>
         <arg name="load_gripper"    value="true"/>
