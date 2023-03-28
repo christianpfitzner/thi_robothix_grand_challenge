@@ -10,6 +10,7 @@
 #include <memory>
 #include "ros/ros.h"
 
+
 class MoveItArmInterface
 {
   public:
@@ -55,7 +56,7 @@ class MoveItArmInterface
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
             target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
             target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;   
+            target_pose.pose.orientation.z = transformStamped.transform.rotation.z + (90/180)*3.1416;   
         }
         catch (tf2::TransformException &ex) 
         {
@@ -113,12 +114,12 @@ class MoveItArmInterface
 
             target_pose.pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
             target_pose.pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
-            target_pose.pose.position.z    = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z;
+            target_pose.pose.position.z    = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z + z_offset_mm;
 
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
             target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
             target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;   
+            target_pose.pose.orientation.z = transformStamped.transform.rotation.z + (45/180)*3.1416;   
         }
         catch (tf2::TransformException &ex) 
         {
@@ -146,8 +147,9 @@ class MoveItArmInterface
     }
 
     bool moveToHome()
-    {   
-        return true; 
+    {
+        //Home Position for Franka NOT Defined! Needs to be defined. 
+        return moveToFrame("home"); 
     }
 
   private:

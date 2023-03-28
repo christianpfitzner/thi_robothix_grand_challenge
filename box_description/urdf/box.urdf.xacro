@@ -95,7 +95,7 @@
 <joint name="box_button_blue_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_button_blue"/>
-  <origin rpy="0 0 0" xyz="0.03405 -0.03225 ${box_len_z}"/>
+  <origin rpy="0 3.1416 3.1416" xyz="0.03405 -0.03225 ${box_len_z}"/>
 </joint>
 <link name="box_button_blue">
   <visual>
@@ -112,7 +112,7 @@
 <joint name="box_button_red_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_button_red"/>
-  <origin rpy="0 0 0" xyz="0.04805 -0.03225 ${box_len_z}"/>
+  <origin rpy="0 3.1416 3.1416" xyz="0.04805 -0.03225 ${box_len_z}"/>
 </joint>
 <link name="box_button_red">
   <visual>
@@ -131,7 +131,7 @@
 <joint name="box_slider_joint" type="prismatic">
   <parent link="box_corner_3"/>
   <child link="box_slider"/>
-  <origin rpy="0 0 0" xyz="-0.0425 -0.0675 ${box_len_z}"/>
+  <origin rpy="0 3.1416 3.1416" xyz="-0.0425 -0.0675 ${box_len_z}"/>
   <limit effort="1000.0" lower="-0.0215" upper="0.0215" velocity="0.5"/>
 </joint>
 <link name="box_slider">
@@ -148,7 +148,7 @@
 <joint name="box_socket_red_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_socket_red"/>
-  <origin rpy="0 0 0" xyz="0.0589 -0.0895 ${box_len_z}"/>
+  <origin rpy="0 3.1416 3.1416" xyz="0.0589 -0.0895 ${box_len_z}"/>
 </joint>
 <link name="box_socket_red">
   <visual>
@@ -165,7 +165,7 @@
 <joint name="box_socket_black_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_socket_black"/>
-  <origin rpy="0 0 0" xyz="0.034 -0.0895 ${box_len_z}"/>
+  <origin rpy="0 3.1416 3.1416" xyz="0.034 -0.0895 ${box_len_z}"/>
 </joint>
 <link name="box_socket_black">
   <visual>
@@ -249,7 +249,7 @@
 <joint name="box_lid_handle_closed_joint" type="fixed">
   <parent link="box_corner_4"/>
   <child link="box_lid_handle_closed"/>
-  <origin rpy="0 0 0" xyz="0 0 ${box_len_z}"/>
+  <origin rpy="0 3.1416 3.1416" xyz="0 0 ${box_len_z}"/>
 </joint>
 <link name="box_lid_handle_closed">
   <visual>
