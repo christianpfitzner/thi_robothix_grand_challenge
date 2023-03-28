@@ -1,0 +1,64 @@
+<launch>
+
+    <node pkg="tf" type="static_transform_publisher" name="camera_tf" args="0 0 0     0 -1.57 0 /panda_hand /camera_link 100"/> 
+
+    <!-- Template Matching Params -->
+    <arg name="match_frame"             default="camera_link"/>
+    <arg name="cloud_topic"             default="/camera/depth_registered/points"/>
+    <arg name="template_file_path"      default="$(find rail_mesh_icp)/cad_models/box.pcd"/>
+    <arg name="initial_estimate"        default="0.55 0 0       0 0 0"/>
+    <arg name="template_offset"         default="0.144 0.118 0.148 0 0 -0.785"/>
+    <arg name="output_frame"            default="box_frame"/>
+    <arg name="visualize_output"        default="true"/>
+    <arg name="debug"                   default="true"/>
+    <arg name="latch_initial_estimate"  default="true"/>
+    <arg name="provide_processed_cloud" default="true"/>
+
+
+    <node pkg="tf" type="static_transform_publisher" name="base_link_broadcaster" args="$(arg initial_estimate) $(arg match_frame) initial_estimate 10" />
+
+
+
+    <node pkg="rail_mesh_icp" type="template_matcher_node" name="template_matcher_demo_node" output="screen">
+        <param name="matching_frame"                value="$(arg match_frame)"/>
+        <param name="pcl_topic"                     value="$(arg cloud_topic)"/>
+        <param name="template_file_path"            value="$(arg template_file_path)"/>
+        <param name="initial_estimate_string"       value="$(arg initial_estimate)"/>
+        <param name="template_offset_string"        value="$(arg template_offset)"/>
+        <param name="template_frame"                value="$(arg output_frame)"/>
+        <param name="visualize"                     value="$(arg visualize_output)"/>
+        <param name="debug"                         value="$(arg debug)" />
+        <param name="latch_initial"                 value="$(arg latch_initial_estimate)"/>
+        <param name="pre_processed_cloud"           value="$(arg provide_processed_cloud)"/>
+    </node>
+
+<!--     
+    <include file="$(find rail_mesh_icp)/launch/template_match_demo.launch" pass_all_args="true">
+        <arg name="cloud_topic"             default="/camera/depth_registered/points"/>
+        <arg name="template_file_path"      default="$(find rail_mesh_icp)/cad_models/box.pcd"/>
+        <arg name="initial_estimate"        default="0 0 0.4      0 0 0"/>
+        <arg name="match_frame"             default="world"/>
+    </include> -->
+
+
+
+    <!-- ICP params -->
+    <arg name="num_iterations"          default="1000000"/>
+    <arg name="max_dist"                default="0.5"/>
+    <arg name="translation_epsilon"     default="0.0000000000001"/>
+    <arg name="model_fit_epsilon"       default="0.0000000000001"/>
+
+
+
+    <!-- launch icp_matcher -->
+    <include file="$(find rail_mesh_icp)/launch/start_icp_matching.launch">
+        <arg name="num_iterations"      value="$(arg num_iterations)"/>
+        <arg name="max_dist"            value="$(arg max_dist)"/>
+        <arg name="translation_epsilon" value="$(arg translation_epsilon)"/>
+        <arg name="model_fit_epsilon"   value="$(arg model_fit_epsilon)"/>
+    </include>
+
+
+
+
+</launch>

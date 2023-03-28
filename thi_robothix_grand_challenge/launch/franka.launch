@@ -1,5 +1,7 @@
 <launch>
 
+    <param name="box_description" command="$(find xacro)/xacro $(find box_description)/urdf/box.urdf.xacro"/>
+    
     <include file="$(find panda_moveit_config)/launch/franka_control.launch" pass_all_args="true">
         <arg name="robot_ip"        value="fci"/>
         <arg name="load_gripper"    value="true"/>
