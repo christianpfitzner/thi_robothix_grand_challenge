@@ -56,7 +56,7 @@ class MoveItArmInterface
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
             target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
             target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z + (90/180)*3.1416;   
+            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;// + 0.78539816339744830961566084581988;   
         }
         catch (tf2::TransformException &ex) 
         {
@@ -110,7 +110,7 @@ class MoveItArmInterface
 
         try
         {
-            geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp_inv", ros::Time(0));
+            geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
 
             target_pose.pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
             target_pose.pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
@@ -119,7 +119,7 @@ class MoveItArmInterface
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
             target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
             target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z + (45/180)*3.1416;   
+            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;// + 1.570796;   
         }
         catch (tf2::TransformException &ex) 
         {

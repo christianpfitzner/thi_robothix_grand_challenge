@@ -4,6 +4,15 @@
 
 int main(int argc, char** argv)
 {
+    //sequence of poses for the robot
+    std::string poses[] = {
+                            "box_button_blue",
+                            "box_button_red",
+                            "box_socket_red",
+                            "box_socket_black",
+                            "box_lid_handle_opened"
+                            };
+
     ros::init(argc, argv, "move_group_interface_test");
     ros::NodeHandle n;
 
@@ -22,19 +31,26 @@ int main(int argc, char** argv)
 
     // Move to target position
     //arm_interface.approachFrame("box_button_blue", -50);
-    arm_interface.moveToFrame("box_button_blue");    
+    //arm_interface.moveToFrame("box_button_blue");    
+
+    for( std::string pose : poses)
+    {
+        arm_interface.moveToFrame(pose);
+        ros::Duration(2).sleep();
+    }
 
     ros::Duration(5).sleep();
 
     // Move to target position
     //arm_interface.approachFrame("box_button_red", -50);
-    arm_interface.moveToFrame("box_button_red");
+    //arm_interface.moveToFrame("box_button_red");
     //arm_interface.approachFrame("box_button_red", -150);
 
-    arm_interface.approachFrame("box_button_blue", -50);
+    //arm_interface.approachFrame("box_button_blue", -50);
     
     // Move to target position
     //arm_interface.approachFrame("box_lid_handle_closed", -50);
+    /*
     arm_interface.moveToFrame("box_lid_handle_closed");
 
     arm_interface.moveToFrame("box_socket_red");
@@ -44,6 +60,7 @@ int main(int argc, char** argv)
     arm_interface.moveToFrame("box_slider");
 
     arm_interface.moveToHome();
+    */
     
     return 0;
 }
