@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv)
 {
-    //sequence of poses for the robot
+    //Sequence of Frames for the Robot to follow
     std::string poses[] = {
                             "box_button_blue",
                             "box_button_red",
@@ -29,10 +29,13 @@ int main(int argc, char** argv)
     // Close gripper
     gripper_interface.closeGripper();
 
-    // Move to target position
-    //arm_interface.approachFrame("box_button_blue", -50);
-    //arm_interface.moveToFrame("box_button_blue");    
+    //Move to detection position
+    arm_interface.moveToFrame("detection_pose");
 
+    //Wait for detection & Localization 
+    ros::Duration(5).sleep();
+
+    //Move to Frames from poses[]
     for( std::string pose : poses)
     {
         arm_interface.moveToFrame(pose);
@@ -41,26 +44,8 @@ int main(int argc, char** argv)
 
     ros::Duration(5).sleep();
 
-    // Move to target position
-    //arm_interface.approachFrame("box_button_red", -50);
-    //arm_interface.moveToFrame("box_button_red");
-    //arm_interface.approachFrame("box_button_red", -150);
-
-    //arm_interface.approachFrame("box_button_blue", -50);
-    
-    // Move to target position
-    //arm_interface.approachFrame("box_lid_handle_closed", -50);
-    /*
-    arm_interface.moveToFrame("box_lid_handle_closed");
-
-    arm_interface.moveToFrame("box_socket_red");
-
-    arm_interface.moveToFrame("box_socket_black");
-
-    arm_interface.moveToFrame("box_slider");
-
     arm_interface.moveToHome();
-    */
+    
     
     return 0;
 }

@@ -5,8 +5,13 @@
 
     <!-- static transform -->
     <node pkg="tf" type="static_transform_publisher" name="world_to_box" args="0.3 0.3 0 0 0 0 world box_base_link 100" />
-    
+    <node pkg = "tf" type="static_transform_publisher" name="link0_to_home" args= "0.306891 0 0.486882 3.1416 3.1416 0 panda_link0 home 100"/>
+    <node pkg = "tf" type="static_transform_publisher" name="link0_to_detection_pose" args= "0.369362 0.153634 0.655991 3.1416 3.1416 0 panda_link0 detection_pose 100"/>
+    <!--
     <node pkg="tf" type="static_transform_publisher" name="tcp_transform_inv" args="0 0 0 0 3.14159265 0 panda_hand_tcp panda_hand_tcp_inv 100" />
+    -->
+
+    
 
     <!-- robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="box_state_publisher" output="screen">

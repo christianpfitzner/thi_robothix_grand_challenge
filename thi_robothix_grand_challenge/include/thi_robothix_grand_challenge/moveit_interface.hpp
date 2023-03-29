@@ -47,7 +47,7 @@ class MoveItArmInterface
 
         try
         {
-            geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp_inv", ros::Time(0));
+            geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
 
             target_pose.pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
             target_pose.pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
