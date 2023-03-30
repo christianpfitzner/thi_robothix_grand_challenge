@@ -20,8 +20,8 @@ int main(int argc, char** argv)
     spinner.start();
 
     // Create MoveItArmInterface
-    MoveItArmInterface arm_interface(std::make_shared<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 5.0, 1, 1);
-    MoveItGripperInterface gripper_interface(std::make_shared<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 5.0, 0.3, 0.1);
+    MoveItArmInterface arm_interface(std::make_shared<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 1, 1);
+    MoveItGripperInterface gripper_interface(std::make_shared<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 0.5, 0.3, 0.1);
 
     // Move to home position
     arm_interface.moveToHome();
@@ -29,16 +29,27 @@ int main(int argc, char** argv)
     // Close gripper
     gripper_interface.closeGripper();
 
+    //Test for Lin and PTP
+    for(int i = 0; i < 5 ; i++)
+    {
+        arm_interface.moveToFrame_Linear("test_pose1");
+        arm_interface.moveToFrame_PTP("test_pose2");
+    }
+
     //Move to detection position
-    arm_interface.moveToFrame("detection_pose");
+    arm_interface.moveToFrame_Linear("detection_pose");
 
     //Wait for detection & Localization 
     ros::Duration(5).sleep();
 
+    arm_interface.moveToFrame_PTP("box_button_blue");
+    arm_interface.moveToHome();
+    arm_interface.moveToFrame_Linear("box_button_blue");
+
     //Move to Frames from poses[]
     for( std::string pose : poses)
     {
-        arm_interface.moveToFrame(pose);
+        arm_interface.moveToFrame_PTP(pose);
         ros::Duration(2).sleep();
     }
 

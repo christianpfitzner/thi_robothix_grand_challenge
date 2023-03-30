@@ -7,6 +7,10 @@
     <node pkg="tf" type="static_transform_publisher" name="world_to_box" args="0.3 0.3 0 0 0 0 world box_base_link 100" />
     <node pkg = "tf" type="static_transform_publisher" name="link0_to_home" args= "0.306891 0 0.486882 3.1416 3.1416 0 panda_link0 home 100"/>
     <node pkg = "tf" type="static_transform_publisher" name="link0_to_detection_pose" args= "0.369362 0.153634 0.655991 3.1416 3.1416 0 panda_link0 detection_pose 100"/>
+    
+    <!--Test Poses, delete after testing-->
+    <node pkg = "tf" type="static_transform_publisher" name="link0_to_test_pose1" args= "0.4 -0.35 0.3 3.1416 3.1416 0 panda_link0 test_pose1 100"/>
+    <node pkg = "tf" type="static_transform_publisher" name="link0_to_test_pose2" args= "0.4 0.35 0.3 3.1416 3.1416 0 panda_link0 test_pose2 100"/>
     <!--
     <node pkg="tf" type="static_transform_publisher" name="tcp_transform_inv" args="0 0 0 0 3.14159265 0 panda_hand_tcp panda_hand_tcp_inv 100" />
     -->
