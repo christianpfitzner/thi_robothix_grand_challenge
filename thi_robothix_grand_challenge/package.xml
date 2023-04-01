@@ -70,6 +70,7 @@
   <build_depend>tf2_convert</build_depend>
   <build_depend>actionlib_msgs</build_depend>
   <build_depend>control_msgs</build_depend>
+  <depend>std_srvs</depend>
 
 
   <exec_depend>pluginlib</exec_depend>
@@ -98,6 +99,7 @@
   <exec_depend>actionlib_msgs</exec_depend>
   <exec_depend>control_msgs</exec_depend>
   <exec_depend>message_generation</exec_depend>
+  
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
