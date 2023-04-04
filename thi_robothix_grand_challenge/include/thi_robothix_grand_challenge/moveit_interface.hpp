@@ -21,40 +21,44 @@ class MoveItArmInterface
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
     };
 
-    void tryTCPTransform(geometry_msgs::Pose *target_pose, tf2_ros::Buffer *tfBuffer)
+    /*
+    geometry_msgs::Pose tryTCPTransform(geometry_msgs::Pose target_pose, tf2_ros::Buffer tfBuffer, 
+                            geometry_msgs::TransformStamped transformStamped , double z_offste_mm)
     {
-        /*
         try
         {
-            geometry_msgs::TransformStamped transform_hand_to_tcp = *tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
+            geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
 
-            *target_pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
-            *target_pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
-            *target_pose.position.z    = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z;
+            target_pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
+            target_pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
+            target_pose.position.z    = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z - z_offste_mm;
 
-            *target_pose.orientation.w = transformStamped.transform.rotation.w;
-            *target_pose.orientation.x = transformStamped.transform.rotation.x;    
-            *target_pose.orientation.y = transformStamped.transform.rotation.y;    
-            *target_pose.orientation.z = transformStamped.transform.rotation.z;   
+            target_pose.orientation.w = transformStamped.transform.rotation.w;
+            target_pose.orientation.x = transformStamped.transform.rotation.x;    
+            target_pose.orientation.y = transformStamped.transform.rotation.y;    
+            target_pose.orientation.z = transformStamped.transform.rotation.z;   
         }
         catch(tf2::TransformException &ex) 
         {
             ROS_WARN("%s",ex.what());
             ros::Duration(1.0).sleep();
 
-            *target_pose.position.x    = transformStamped.transform.translation.x; 
-            *target_pose.position.y    = transformStamped.transform.translation.y; 
-            *target_pose.position.z    = transformStamped.transform.translation.z; 
+            target_pose.position.x    = transformStamped.transform.translation.x; 
+            target_pose.position.y    = transformStamped.transform.translation.y; 
+            target_pose.position.z    = transformStamped.transform.translation.z - z_offste_mm; 
 
-            *target_pose.orientation.w = transformStamped.transform.rotation.w;
-            *target_pose.orientation.x = transformStamped.transform.rotation.x;    
-            *target_pose.orientation.y = transformStamped.transform.rotation.y;    
-            *target_pose.orientation.z = transformStamped.transform.rotation.z;  
+            target_pose.orientation.w = transformStamped.transform.rotation.w;
+            target_pose.orientation.x = transformStamped.transform.rotation.x;    
+            target_pose.orientation.y = transformStamped.transform.rotation.y;    
+            target_pose.orientation.z = transformStamped.transform.rotation.z;  
         }
-        */
+        
+        return target_pose;
     }
 
-    bool moveToFrame_PTP(std::string frame_id)
+    */
+
+    bool moveToFramePTP(std::string frame_id)
     {
         bool success = false; 
 
@@ -67,6 +71,7 @@ class MoveItArmInterface
         try
         {
          transformStamped = tfBuffer.lookupTransform("panda_link0", frame_id, ros::Time(0));
+         
         }
         catch (tf2::TransformException &ex) 
         {
@@ -90,7 +95,7 @@ class MoveItArmInterface
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
             target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
             target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;// + 0.78539816339744830961566084581988;   
+            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;
         }
         catch (tf2::TransformException &ex) 
         {
@@ -116,7 +121,7 @@ class MoveItArmInterface
         return success; 
     }
 
-    bool moveToFrame_Linear(std::string frame_id)
+    bool moveToFrameLinear(std::string frame_id)
     {
         bool success = false;
 
@@ -201,7 +206,9 @@ class MoveItArmInterface
 
     bool approachFrame(std::string frame_id, double z_offset_mm)
     {
-        bool success = false; 
+        z_offset_mm = z_offset_mm / 1000; //going from mm -> m
+
+       bool success = false; 
 
         geometry_msgs::TransformStamped transformStamped;
 
@@ -221,7 +228,6 @@ class MoveItArmInterface
             return success; 
         }
 
-
         geometry_msgs::PoseStamped target_pose; 
         target_pose.header.frame_id    = "panda_link0";
 
@@ -236,7 +242,7 @@ class MoveItArmInterface
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
             target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
             target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;// + 1.570796;   
+            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;
         }
         catch (tf2::TransformException &ex) 
         {
@@ -245,13 +251,13 @@ class MoveItArmInterface
 
             target_pose.pose.position.x    = transformStamped.transform.translation.x; 
             target_pose.pose.position.y    = transformStamped.transform.translation.y; 
-            target_pose.pose.position.z    = transformStamped.transform.translation.z; 
+            target_pose.pose.position.z    = transformStamped.transform.translation.z + z_offset_mm; 
 
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
             target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
             target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
             target_pose.pose.orientation.z = transformStamped.transform.rotation.z;   
-        }   
+        }
 
         mgi_->setPoseTarget(target_pose);
 
@@ -259,14 +265,20 @@ class MoveItArmInterface
 
         if(success)
             mgi_->move();
-
         return success; 
     }
 
     bool moveToHome()
     {
         //Home Position for Franka Emika
-        return moveToFrame_PTP("home"); 
+        return moveToFramePTP("home"); 
+    }
+
+    bool moveCircular()
+    {
+        bool success = false;
+
+        return success;
     }
 
   private:

@@ -10,7 +10,9 @@ int main(int argc, char** argv)
                             "box_button_red",
                             "box_socket_red",
                             "box_socket_black",
-                            "box_lid_handle_opened"
+                            "box_lid_handle_closed",
+                            "box_lid_handle_opened",
+                            "box_slider"
                             };
 
     ros::init(argc, argv, "move_group_interface_test");
@@ -30,28 +32,31 @@ int main(int argc, char** argv)
     gripper_interface.closeGripper();
 
     //Test for Lin and PTP
+    /*
     for(int i = 0; i < 5 ; i++)
     {
-        arm_interface.moveToFrame_Linear("test_pose1");
-        arm_interface.moveToFrame_PTP("test_pose2");
+        arm_interface.moveToFrameLinear("test_pose1");
+        arm_interface.moveToFramePTP("test_pose2");
     }
+    */
 
     //Move to detection position
-    arm_interface.moveToFrame_Linear("detection_pose");
+    //arm_interface.moveToFrameLinear("detection_pose");
 
     //Wait for detection & Localization 
     ros::Duration(5).sleep();
 
-    arm_interface.moveToFrame_PTP("box_button_blue");
-    arm_interface.moveToHome();
-    arm_interface.moveToFrame_Linear("box_button_blue");
+    arm_interface.approachFrame("home", 100);
 
     //Move to Frames from poses[]
+    
     for( std::string pose : poses)
-    {
-        arm_interface.moveToFrame_PTP(pose);
-        ros::Duration(2).sleep();
+    {   
+        arm_interface.approachFrame(pose, 50);
+        arm_interface.moveToFrameLinear(pose);
+        //ros::Duration(2).sleep();
     }
+    
 
     ros::Duration(5).sleep();
 
