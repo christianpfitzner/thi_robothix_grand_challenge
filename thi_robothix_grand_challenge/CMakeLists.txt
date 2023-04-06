@@ -20,6 +20,7 @@ find_package(catkin REQUIRED
     tf2_geometry_msgs
     actionlib_msgs
     control_msgs
+    std_srvs
 )
 
 find_package(Eigen3 REQUIRED)
@@ -40,6 +41,7 @@ catkin_package(
     tf2_geometry_msgs
     actionlib_msgs
     control_msgs
+    std_srvs
   DEPENDS
     EIGEN3
 )
@@ -54,6 +56,9 @@ target_link_libraries(pick_and_place_tutorial_lsg ${catkin_LIBRARIES} ${Boost_LI
 
 add_executable(press_button src/press_button.cpp)
 target_link_libraries(press_button ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(detect_box src/detect_box.cpp)
+target_link_libraries(detect_box ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 # add_executable(pick_and_place_collision src/pick_and_place_collision.cpp)
 # target_link_libraries(pick_and_place_collision ${catkin_LIBRARIES} ${Boost_LIBRARIES})
