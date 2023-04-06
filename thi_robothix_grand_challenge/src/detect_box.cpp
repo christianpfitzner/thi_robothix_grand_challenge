@@ -118,7 +118,7 @@ int main(int argc, char** argv)
     auto box_feature_detected = std::make_shared<bool>(false);
 
     //Move to detection position
-    arm_interface.moveToFrame("detection_pose");
+    arm_interface.moveToFramePTP("detection_pose");
 
     // trigger box feature detection
     std::thread trigger_box_feature_detection_thread(trigger_box_feature_detection, nh, box_feature_detected);
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
     ros::Duration(1).sleep();
 
     // lower arm to box
-    arm_interface.approachFrame("detection_pose", -0.1);
+    arm_interface.approachFrame("detection_pose", -10, arm_interface.lin);
 
     // wait for box feature detection
     trigger_box_feature_detection_thread.join();
@@ -145,8 +145,8 @@ int main(int argc, char** argv)
     │ Validate position detection by pressing red button                          │
     └─────────────────────────────────────────────────────────────────────────────┘
 */
-    arm_interface.approachFrame("box_button_red", 0.05);
-    arm_interface.moveToFrame("box_button_red");
+    arm_interface.approachFrame("box_button_red", 0.05, arm_interface.ptp);
+    arm_interface.moveToFrameLinear("box_button_red");
     
     
     return 0;
