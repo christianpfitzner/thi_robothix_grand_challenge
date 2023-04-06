@@ -10,118 +10,81 @@
 #include <memory>
 #include "ros/ros.h"
 #include <moveit/robot_state/robot_state.h>
-
+#include <stdexcept>
 
 class MoveItArmInterface
 {
-  public:
-    MoveItArmInterface(std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi, const double planning_time, const double max_vel_scale_factor, const double max_acc_scale_factor) : mgi_(mgi) {
+public:
+    MoveItArmInterface(std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi, const double planning_time, const double max_vel_scale_factor, const double max_acc_scale_factor) : mgi_(mgi)
+    {
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
     };
 
-    /*
-    geometry_msgs::Pose tryTCPTransform(geometry_msgs::Pose target_pose, tf2_ros::Buffer tfBuffer, 
-                            geometry_msgs::TransformStamped transformStamped , double z_offste_mm)
+    bool moveToFramePTP(std::string frame_id, double z_offset_m)
     {
-        try
-        {
-            geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
-
-            target_pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
-            target_pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
-            target_pose.position.z    = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z - z_offste_mm;
-
-            target_pose.orientation.w = transformStamped.transform.rotation.w;
-            target_pose.orientation.x = transformStamped.transform.rotation.x;    
-            target_pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.orientation.z = transformStamped.transform.rotation.z;   
-        }
-        catch(tf2::TransformException &ex) 
-        {
-            ROS_WARN("%s",ex.what());
-            ros::Duration(1.0).sleep();
-
-            target_pose.position.x    = transformStamped.transform.translation.x; 
-            target_pose.position.y    = transformStamped.transform.translation.y; 
-            target_pose.position.z    = transformStamped.transform.translation.z - z_offste_mm; 
-
-            target_pose.orientation.w = transformStamped.transform.rotation.w;
-            target_pose.orientation.x = transformStamped.transform.rotation.x;    
-            target_pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.orientation.z = transformStamped.transform.rotation.z;  
-        }
-        
-        return target_pose;
-    }
-
-    */
-
-    bool moveToFramePTP(std::string frame_id)
-    {
-        bool success = false; 
+        bool success = false;
 
         geometry_msgs::TransformStamped transformStamped;
 
         tf2_ros::Buffer tfBuffer;
-        tf2_ros::TransformListener tfListener(tfBuffer);    
+        tf2_ros::TransformListener tfListener(tfBuffer);
 
         ros::Duration(1.0).sleep();
         try
         {
-         transformStamped = tfBuffer.lookupTransform("panda_link0", frame_id, ros::Time(0));
-         
+            transformStamped = tfBuffer.lookupTransform("panda_link0", frame_id, ros::Time(0));
         }
-        catch (tf2::TransformException &ex) 
+        catch (tf2::TransformException &ex)
         {
-            ROS_WARN("%s",ex.what());
+            ROS_WARN("%s", ex.what());
             ros::Duration(1.0).sleep();
 
-            return success; 
+            return success;
         }
 
-        geometry_msgs::PoseStamped target_pose; 
-        target_pose.header.frame_id    = "panda_link0";
+        geometry_msgs::PoseStamped target_pose;
+        target_pose.header.frame_id = "panda_link0";
 
         try
         {
             geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
 
-            target_pose.pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
-            target_pose.pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
-            target_pose.pose.position.z    = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z;
+            target_pose.pose.position.x = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x;
+            target_pose.pose.position.y = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y;
+            target_pose.pose.position.z = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z + z_offset_m;
 
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
-            target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
-            target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
+            target_pose.pose.orientation.x = transformStamped.transform.rotation.x;
+            target_pose.pose.orientation.y = transformStamped.transform.rotation.y;
             target_pose.pose.orientation.z = transformStamped.transform.rotation.z;
         }
-        catch (tf2::TransformException &ex) 
+        catch (tf2::TransformException &ex)
         {
-            ROS_WARN("%s",ex.what());
+            ROS_WARN("%s", ex.what());
             ros::Duration(1.0).sleep();
 
-            target_pose.pose.position.x    = transformStamped.transform.translation.x; 
-            target_pose.pose.position.y    = transformStamped.transform.translation.y; 
-            target_pose.pose.position.z    = transformStamped.transform.translation.z; 
+            target_pose.pose.position.x = transformStamped.transform.translation.x;
+            target_pose.pose.position.y = transformStamped.transform.translation.y;
+            target_pose.pose.position.z = transformStamped.transform.translation.z;
 
             target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
-            target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
-            target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;   
+            target_pose.pose.orientation.x = transformStamped.transform.rotation.x;
+            target_pose.pose.orientation.y = transformStamped.transform.rotation.y;
+            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;
         }
 
         mgi_->setPoseTarget(target_pose);
 
         success = (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 
-        if(success)
+        if (success)
             mgi_->move();
-        return success; 
+        return success;
     }
 
-    bool moveToFrameLinear(std::string frame_id)
+    bool moveToFrameLinear(std::string frame_id, double z_offset_m)
     {
         bool success = false;
 
@@ -131,64 +94,61 @@ class MoveItArmInterface
         geometry_msgs::TransformStamped transformStamped;
 
         tf2_ros::Buffer tfBuffer;
-        tf2_ros::TransformListener tfListener(tfBuffer);    
+        tf2_ros::TransformListener tfListener(tfBuffer);
 
         ros::Duration(1.0).sleep();
 
         try
         {
-            //must be transformed from world and not
-            //from link0, because Pose is beign used here and not PoseStamped
+            // must be transformed from world and not
+            // from link0, because Pose is beign used here and not PoseStamped
             transformStamped = tfBuffer.lookupTransform("world", frame_id, ros::Time(0));
-         
         }
-        catch (tf2::TransformException &ex) 
+        catch (tf2::TransformException &ex)
         {
-            ROS_WARN("%s",ex.what());
+            ROS_WARN("%s", ex.what());
             ros::Duration(1.0).sleep();
 
-            return success; 
+            return success;
         }
 
+        // tryTCPTransform(&target_pose,&tfBuffer);
 
-        //tryTCPTransform(&target_pose,&tfBuffer);
-        
         try
         {
             geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
 
-            target_pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
-            target_pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
-            target_pose.position.z    = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z;
+            target_pose.position.x = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x;
+            target_pose.position.y = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y;
+            target_pose.position.z = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z + z_offset_m;
 
             target_pose.orientation.w = transformStamped.transform.rotation.w;
-            target_pose.orientation.x = transformStamped.transform.rotation.x;    
-            target_pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.orientation.z = transformStamped.transform.rotation.z;   
+            target_pose.orientation.x = transformStamped.transform.rotation.x;
+            target_pose.orientation.y = transformStamped.transform.rotation.y;
+            target_pose.orientation.z = transformStamped.transform.rotation.z;
         }
-        catch(tf2::TransformException &ex) 
+        catch (tf2::TransformException &ex)
         {
-            ROS_WARN("%s",ex.what());
+            ROS_WARN("%s", ex.what());
             ros::Duration(1.0).sleep();
 
-            target_pose.position.x    = transformStamped.transform.translation.x; 
-            target_pose.position.y    = transformStamped.transform.translation.y; 
-            target_pose.position.z    = transformStamped.transform.translation.z; 
+            target_pose.position.x = transformStamped.transform.translation.x;
+            target_pose.position.y = transformStamped.transform.translation.y;
+            target_pose.position.z = transformStamped.transform.translation.z;
 
             target_pose.orientation.w = transformStamped.transform.rotation.w;
-            target_pose.orientation.x = transformStamped.transform.rotation.x;    
-            target_pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.orientation.z = transformStamped.transform.rotation.z;  
+            target_pose.orientation.x = transformStamped.transform.rotation.x;
+            target_pose.orientation.y = transformStamped.transform.rotation.y;
+            target_pose.orientation.z = transformStamped.transform.rotation.z;
         }
-        
 
-        //Add Target Pose to waypoints
+        // Add Target Pose to waypoints
         waypoints.push_back(target_pose);
 
-        /*We want the Cartesian path to be interpolated at a resolution of 1 cm which is 
-        why we will specify 0.01 as the max step in Cartesian translation. 
-        We will specify the jump threshold as 0.0, effectively disabling it. 
-        !!!! Warning - disabling the jump threshold while operating real hardware can cause large 
+        /*We want the Cartesian path to be interpolated at a resolution of 1 cm which is
+        why we will specify 0.01 as the max step in Cartesian translation.
+        We will specify the jump threshold as 0.0, effectively disabling it.
+        !!!! Warning - disabling the jump threshold while operating real hardware can cause large
         unpredictable motions of redundant joints and could be a safety issue!!!*/
 
         moveit_msgs::RobotTrajectory trajectory;
@@ -198,80 +158,38 @@ class MoveItArmInterface
 
         success = (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 
-        if(success)
+        if (success)
             mgi_->execute(trajectory);
 
         return success;
     }
 
-    bool approachFrame(std::string frame_id, double z_offset_mm)
+    bool approachFrame(std::string frame_id, double z_offset_mm, std::string motion_type)
     {
-        z_offset_mm = z_offset_mm / 1000; //going from mm -> m
+        double z_offset_m = z_offset_mm / 1000; // going from mm -> m
 
-       bool success = false; 
-
-        geometry_msgs::TransformStamped transformStamped;
-
-        tf2_ros::Buffer tfBuffer;
-        tf2_ros::TransformListener tfListener(tfBuffer);    
-
-        ros::Duration(1.0).sleep();
-        try
+        if (motion_type.compare(lin))
         {
-         transformStamped = tfBuffer.lookupTransform("panda_link0", frame_id, ros::Time(0));
+            return moveToFrameLinear(frame_id, z_offset_m);
         }
-        catch (tf2::TransformException &ex) 
+        else if (motion_type.compare(ptp))
         {
-            ROS_WARN("%s",ex.what());
-            ros::Duration(1.0).sleep();
-
-            return success; 
+            return moveToFramePTP(frame_id, z_offset_m);
         }
-
-        geometry_msgs::PoseStamped target_pose; 
-        target_pose.header.frame_id    = "panda_link0";
-
-        try
+        else
         {
-            geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
-
-            target_pose.pose.position.x    = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x; 
-            target_pose.pose.position.y    = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y; 
-            target_pose.pose.position.z    = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z + z_offset_mm;
-
-            target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
-            target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
-            target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;
+            std::string error = std::string("Non defined motion type:") + motion_type;
+            throw std::runtime_error(error);
+            return false;
         }
-        catch (tf2::TransformException &ex) 
-        {
-            ROS_WARN("%s",ex.what());
-            ros::Duration(1.0).sleep();
-
-            target_pose.pose.position.x    = transformStamped.transform.translation.x; 
-            target_pose.pose.position.y    = transformStamped.transform.translation.y; 
-            target_pose.pose.position.z    = transformStamped.transform.translation.z + z_offset_mm; 
-
-            target_pose.pose.orientation.w = transformStamped.transform.rotation.w;
-            target_pose.pose.orientation.x = transformStamped.transform.rotation.x;    
-            target_pose.pose.orientation.y = transformStamped.transform.rotation.y;    
-            target_pose.pose.orientation.z = transformStamped.transform.rotation.z;   
-        }
-
-        mgi_->setPoseTarget(target_pose);
-
-        success = (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-
-        if(success)
-            mgi_->move();
-        return success; 
     }
+
+
 
     bool moveToHome()
     {
-        //Home Position for Franka Emika
-        return moveToFramePTP("home"); 
+        // Home Position for Franka Emika
+        return moveToFramePTP("home");
     }
 
     bool moveCircular()
@@ -281,15 +199,30 @@ class MoveItArmInterface
         return success;
     }
 
-  private:
+    bool moveToFrameLinear(std::string frame_id)
+    {
+        return moveToFrameLinear(frame_id, 0);
+    }
+
+    bool moveToFramePTP(std::string frame_id)
+    {
+    return moveToFramePTP(frame_id, 0);
+    }
+
+    public:
+    const std::string lin = "lin";
+    const std::string ptp = "ptp";
+
+    private:
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
     moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm_;
 };
 
 class MoveItGripperInterface
 {
-  public:
-    MoveItGripperInterface(std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi, const double planning_time, const double max_vel_scale_factor, const double max_acc_scale_factor) : mgi_(mgi) {
+public:
+    MoveItGripperInterface(std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi, const double planning_time, const double max_vel_scale_factor, const double max_acc_scale_factor) : mgi_(mgi)
+    {
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
@@ -300,42 +233,43 @@ class MoveItGripperInterface
         mgi_->setJointValueTarget(mgi_->getNamedTargetValues("close"));
 
         bool success = (mgi_->plan(my_plan_gripper_) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-        if(success) mgi_->move();
+        if (success)
+            mgi_->move();
 
-        return success; 
+        return success;
     }
-    
+
     bool openGripper()
     {
         mgi_->setJointValueTarget(mgi_->getNamedTargetValues("open"));
 
         bool success = (mgi_->plan(my_plan_gripper_) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-        if(success) mgi_->move();
+        if (success)
+            mgi_->move();
 
         return success;
     }
 
     bool setGripperWidth(double width)
     {
-        std::vector<double> finger_width; 
-        finger_width.resize(2); 
-        finger_width[0] = width; 
-        finger_width[1] = width; 
+        std::vector<double> finger_width;
+        finger_width.resize(2);
+        finger_width[0] = width;
+        finger_width[1] = width;
 
         mgi_->setJointValueTarget(finger_width);
 
         const bool success = (mgi_->plan(my_plan_gripper_) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-    
-        if(success)
+
+        if (success)
             mgi_->move();
 
-
-        return success; 
+        return success;
     }
 
-  private:
+private:
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
     moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper_;
 };
 
-# endif
+#endif
