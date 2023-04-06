@@ -6,6 +6,9 @@ int main(int argc, char** argv)
 {
     //Sequence of Frames for the Robot to follow
     std::string poses[] = {
+                            "box_lid_opening_pos_1",
+                            "box_lid_opening_pos_2",
+                            "box_lid_opening_pos_3",
                             "box_button_blue",
                             "box_button_red",
                             "box_socket_red",
@@ -52,7 +55,7 @@ int main(int argc, char** argv)
     
     for( std::string pose : poses)
     {   
-        arm_interface.approachFrame(pose, 50, arm_interface.ptp);
+        //arm_interface.approachFrame(pose, 50, arm_interface.ptp);
         arm_interface.moveToFrameLinear(pose);
         //ros::Duration(2).sleep();
     }
