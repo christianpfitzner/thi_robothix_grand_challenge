@@ -49,13 +49,13 @@ int main(int argc, char** argv)
     //Wait for detection & Localization 
     ros::Duration(5).sleep();
 
-    arm_interface.approachFrame("home", 100, arm_interface.lin);
+    arm_interface.approachFrameLinear("home", 100);
 
     //Move to Frames from poses[]
     
     for( std::string pose : poses)
     {   
-        //arm_interface.approachFrame(pose, 50, arm_interface.ptp);
+        //arm_interface.approachFramePTP(pose, 50);
         arm_interface.moveToFrameLinear(pose);
         //ros::Duration(2).sleep();
     }
@@ -64,7 +64,6 @@ int main(int argc, char** argv)
     ros::Duration(5).sleep();
 
     arm_interface.moveToHome();
-    
     
     return 0;
 }

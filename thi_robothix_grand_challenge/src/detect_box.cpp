@@ -2,6 +2,7 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 #include "ros/ros.h"
 #include "std_srvs/Trigger.h"
+#include <tf/exceptions.h>
 
 #include <memory>
 #include <thread>
@@ -127,7 +128,16 @@ int main(int argc, char** argv)
     ros::Duration(1).sleep();
 
     // lower arm to box
-    arm_interface.approachFrame("detection_pose", -10, arm_interface.lin);
+    try
+    {
+        arm_interface.approachFrameLinear("detection_pose", -10);
+    }
+    catch (tf::LookupException & e)
+    {
+        ROS_ERROR("TF Lookup Exception: %s", e.what());
+        arm_interface.moveToHome();
+        return 0;
+    }
 
     // wait for box feature detection
     trigger_box_feature_detection_thread.join();
@@ -145,7 +155,7 @@ int main(int argc, char** argv)
     │ Validate position detection by pressing red button                          │
     └─────────────────────────────────────────────────────────────────────────────┘
 */
-    arm_interface.approachFrame("box_button_red", 0.05, arm_interface.ptp);
+    arm_interface.approachFramePTP("box_button_red", 0.05);
     arm_interface.moveToFrameLinear("box_button_red");
     
     
