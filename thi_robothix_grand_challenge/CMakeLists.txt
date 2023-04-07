@@ -48,9 +48,6 @@ catkin_package(
 
 include_directories(include SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
 
-add_executable(pick_and_place_tutorial        src/pick_and_place.cpp)
-target_link_libraries(pick_and_place_tutorial ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
 add_executable(pick_and_place_tutorial_lsg        src/pick_and_place_lsg.cpp)
 target_link_libraries(pick_and_place_tutorial_lsg ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
