@@ -20,6 +20,7 @@ find_package(catkin REQUIRED
     tf2_geometry_msgs
     actionlib_msgs
     control_msgs
+    std_srvs
 )
 
 find_package(Eigen3 REQUIRED)
@@ -31,7 +32,7 @@ generate_messages(
 
 catkin_package(
   LIBRARIES
-  INCLUDE_DIRS
+  INCLUDE_DIRS include
   CATKIN_DEPENDS
     moveit_core
     moveit_visual_tools
@@ -40,18 +41,21 @@ catkin_package(
     tf2_geometry_msgs
     actionlib_msgs
     control_msgs
+    std_srvs
   DEPENDS
     EIGEN3
 )
 
-include_directories(SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
-
-add_executable(pick_and_place_tutorial        src/pick_and_place.cpp)
-target_link_libraries(pick_and_place_tutorial ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
+include_directories(include SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
 
 add_executable(pick_and_place_tutorial_lsg        src/pick_and_place_lsg.cpp)
 target_link_libraries(pick_and_place_tutorial_lsg ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(press_button src/press_button.cpp)
+target_link_libraries(press_button ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(detect_box src/detect_box.cpp)
+target_link_libraries(detect_box ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 # add_executable(pick_and_place_collision src/pick_and_place_collision.cpp)
 # target_link_libraries(pick_and_place_collision ${catkin_LIBRARIES} ${Boost_LIBRARIES})

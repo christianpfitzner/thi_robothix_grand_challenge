@@ -7,8 +7,6 @@
 #include <geometry_msgs/PoseStamped.h> 
 
 
-
-
 moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm;
 moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper;
 
