@@ -135,6 +135,7 @@ int main(int argc, char** argv)
 
   move_group_interface_arm.setPlanningTime(5.0);
   move_group_interface_gripper.setPlanningTime(5.0);
+  // move_group_interface_gripper.
 
   // set the speed for the gripper
   move_group_interface_gripper.setMaxVelocityScalingFactor(0.5);
@@ -181,15 +182,57 @@ int main(int argc, char** argv)
       ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
       move_group_interface_arm.move();
 
-      // closeGripper(   &move_group_interface_gripper);
+      //box
+      // moveit_msgs::CollisionObject collision_object;
+      // collision_object.header.frame_id = move_group_interface_arm.getPlanningFrame();
+      // collision_object.id = "box1";
+
+      // shape_msgs::SolidPrimitive primitive;
+      // primitive.type = primitive.BOX;
+      // primitive.dimensions.resize(3);
+      // primitive.dimensions[primitive.BOX_X] = 0.5;
+      // primitive.dimensions[primitive.BOX_Y] = 0.01;
+      // primitive.dimensions[primitive.BOX_Z] = 0.1;
+
+      // geometry_msgs::Pose box_pose;
+      // box_pose.orientation.w = 1.0;
+      // box_pose.position.x = 0.452;
+      // box_pose.position.y = 0.200;
+      // box_pose.position.z = 0.122;
+
+      // collision_object.primitives.push_back(primitive);
+      // collision_object.primitive_poses.push_back(box_pose);
+      // collision_object.operation = collision_object.ADD;
+
+      // std::vector<moveit_msgs::CollisionObject> collision_objects;
+      // collision_objects.push_back(collision_object);
+      
+      // planning_scene_interface.addCollisionObjects(collision_objects);
+
+      //move commands
+      
+      openGripper(&move_group_interface_gripper);
+      closeGripper(&move_group_interface_gripper);
+
+      moveToFrame(&move_group_interface_arm, "p4" );
+      setGripperWidth(&move_group_interface_gripper, 0.025);
+      moveToFrame(&move_group_interface_arm, "p5" );
+      moveToFrame(&move_group_interface_arm, "p6" );
+      setGripperWidth(&move_group_interface_gripper, 0.00425);
+      moveToFrame(&move_group_interface_arm, "p5" );
+      moveToFrame(&move_group_interface_arm, "p4" );
+      moveToFrame(&move_group_interface_arm, "p5" );
+      moveToFrame(&move_group_interface_arm, "p6" );
+      setGripperWidth(&move_group_interface_gripper, 0.025);
+      moveToFrame(&move_group_interface_arm, "p4" );
+      
       // openGripper(    &move_group_interface_gripper); 
 
-      moveToFrame(    &move_group_interface_arm, "corner" ); 
+      // moveToFrame(&move_group_interface_arm, "corner" ); 
       // openGripper(    &move_group_interface_gripper); 
-      moveToFrame(    &move_group_interface_arm, "totmann" ); 
-      // setGripperWidth(&move_group_interface_gripper, 0.025);
-      moveToFrame(    &move_group_interface_arm, "camera" ); 
-      moveToFrame(    &move_group_interface_arm, "corner" ); 
+      // moveToFrame(&move_group_interface_arm, "totmann" ); 
+      // moveToFrame(&move_group_interface_arm, "camera" ); 
+      // moveToFrame(&move_group_interface_arm, "corner" ); 
       // moveToFrame(    &move_group_interface_arm, "place" ); 
       // openGripper(    &move_group_interface_gripper); 
       // moveToFrame(    &move_group_interface_arm, "pre_place" ); 
