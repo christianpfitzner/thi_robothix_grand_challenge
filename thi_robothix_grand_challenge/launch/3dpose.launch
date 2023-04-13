@@ -28,7 +28,7 @@
         <param name="template_frame"                value="$(arg output_frame)"/>
         <param name="visualize"                     value="$(arg visualize_output)"/>
         <param name="debug"                         value="$(arg debug)" />
-        <param name="latch_initial"                 value="$(arg latch_initial_estimate)"/>
+        <param name="latch_initial"                 value="true"/>
         <param name="pre_processed_cloud"           value="$(arg provide_processed_cloud)"/>
     </node>
 

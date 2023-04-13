@@ -103,10 +103,10 @@ class MoveItArmInterface
         target_pose.position.x = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x + offset.position.x;
         target_pose.position.y = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y + offset.position.y;
         target_pose.position.z = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z + offset.position.z;
-        target_pose.orientation.w = transformStamped.transform.rotation.w * offset.orientation.w;
-        target_pose.orientation.x = transformStamped.transform.rotation.x * offset.orientation.x;
-        target_pose.orientation.y = transformStamped.transform.rotation.y * offset.orientation.y;
-        target_pose.orientation.z = transformStamped.transform.rotation.z * offset.orientation.z;
+        target_pose.orientation.w = transformStamped.transform.rotation.w; // * offset.orientation.w;
+        target_pose.orientation.x = transformStamped.transform.rotation.x; // * offset.orientation.x;
+        target_pose.orientation.y = transformStamped.transform.rotation.y; // * offset.orientation.y;
+        target_pose.orientation.z = transformStamped.transform.rotation.z; // * offset.orientation.z;
 
         // Add Target Pose to waypoints
         waypoints.push_back(target_pose);
@@ -145,10 +145,10 @@ class MoveItArmInterface
         target_pose.pose.position.x = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x + offset.position.x;
         target_pose.pose.position.y = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y + offset.position.y;
         target_pose.pose.position.z = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z + offset.position.z;
-        target_pose.pose.orientation.w = transformStamped.transform.rotation.w * offset.orientation.w;
-        target_pose.pose.orientation.x = transformStamped.transform.rotation.x * offset.orientation.x;
-        target_pose.pose.orientation.y = transformStamped.transform.rotation.y * offset.orientation.y;
-        target_pose.pose.orientation.z = transformStamped.transform.rotation.z * offset.orientation.z;
+        target_pose.pose.orientation.w = transformStamped.transform.rotation.w; // * offset.orientation.w;
+        target_pose.pose.orientation.x = transformStamped.transform.rotation.x; // * offset.orientation.x;
+        target_pose.pose.orientation.y = transformStamped.transform.rotation.y; // * offset.orientation.y;
+        target_pose.pose.orientation.z = transformStamped.transform.rotation.z; // * offset.orientation.z;
 
 
         mgi_->setPoseTarget(target_pose);
