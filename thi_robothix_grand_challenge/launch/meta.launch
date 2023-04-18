@@ -4,8 +4,8 @@
 
     <!-- static transform -->
     <node pkg="tf" type="static_transform_publisher" name="world_to_box" args="0.3 0.3 0 0 0 0 world box_base_link 100" />
-    <node pkg="tf" type="static_transform_publisher" name="world_to_link0" args="0.0 0.0 0.01045 0 0.014 -0.009 world panda_link0 100" />
-
+    <node pkg="tf" type="static_transform_publisher" name="world_to_link0" args="0.0 0.0 0.0 -0.00527394 0.00971645 0.0 0.999938886206419 world panda_link0 100" />
+    
     <node pkg = "tf" type="static_transform_publisher" name="link0_to_home" args= "0.306891 0 0.486882 0.7853981 3.1416 0 panda_link0 home 100"/>
     <node pkg = "tf" type="static_transform_publisher" name="link0_to_detection_pose" args= "0.369362 0.153634 0.655991 3.1416 3.1416 0 panda_link0 detection_pose 100"/>
     
