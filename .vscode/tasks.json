@@ -1,0 +1,40 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "catkin build",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && catkin build",
+            "icon": {"color": "terminal.ansiRed","id": "wrench"},
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "roslaunch sim.launch",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && cd ../.. && source devel/setup.bash && roslaunch ${workspaceFolder}/thi_robothix_grand_challenge/launch/sim.launch",
+            "problemMatcher": ["$roslaunch"],
+            "isBackground": true,
+            "icon": {"color": "terminal.ansiWhite", "id": "rocket"},
+
+        },
+        {
+            "label": "rosrun detect_box.cpp",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && cd ../.. && source devel/setup.bash && rosrun thi_robothix_grand_challenge_2023 detect_box",
+            "dependsOn": ["catkin build","roslaunch sim.launch"],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "icon": {"color": "terminal.ansiGreen", "id": "run"},
+        }   
+    ]
+}
