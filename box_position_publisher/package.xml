@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>box_position_publisher</name>
+  <version>0.0.0</version>
+  <description>The box_position_publisher package. The position is calculated from 3 points that are input by the user. The points are used to calculate the origin of the box as well as the orientation of the box.</description>
+
+  <maintainer email="jon-schmidt@outlook.de">Jonas Schmidt</maintainer>
+
+  <license>TODO</license>
+
+  <url type="website">https://github.com/christianpfitzner/thi_robothix_grand_challenge</url>
+
+  <author email="jon-schmidt@outlook.de">Jonas Schmidt</author>
+  <author email="jane.doe@example.com">Borislav Radev</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_export_depend>geometry_msgs</build_export_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>tf</build_export_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>tf</exec_depend>
+  
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>
