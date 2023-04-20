@@ -10,19 +10,10 @@
 #include <stdexcept>
 #include <thread>
 
-inline std::vector<std::shared_ptr<TaskClass>> create_tasks(int argc, char **argv)
+inline std::vector<std::shared_ptr<TaskClass>> create_tasks(std::string task_order)
 {
     std::vector<std::shared_ptr<TaskClass>> tasks;
     tasks.resize(5);
-
-    std::string task_order = "ABCDE";
-
-    // check if task order is given as argument and if it is valid
-    if(argc == 2)
-        task_order = argv[1];
-        
-    else
-        ROS_ERROR("No task order given. Using default task order.");
 
     if(task_order.size() != 5)
     {
@@ -135,7 +126,11 @@ int main(int argc, char **argv)
   │ Create Tasks                                                                │
   └─────────────────────────────────────────────────────────────────────────────┘
 */
-    std::vector<std::shared_ptr<TaskClass>> tasks = create_tasks(argc, argv);
+    std::string task_order = "ABCDE";
+    if(!nh.getParam("/task_order", task_order))
+        ROS_ERROR("Could not get task order from parameter server. Using default task order.");
+
+    std::vector<std::shared_ptr<TaskClass>> tasks = create_tasks(task_order);
 
 /* 
   ┌─────────────────────────────────────────────────────────────────────────────┐
