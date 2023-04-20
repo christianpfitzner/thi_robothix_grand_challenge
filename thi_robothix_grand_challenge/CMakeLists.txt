@@ -68,6 +68,7 @@ target_link_libraries(detect_box ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 catkin_install_python(PROGRAMS
     scripts/target_second_arrow_V2.py
+    scripts/find_box_aprox.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
