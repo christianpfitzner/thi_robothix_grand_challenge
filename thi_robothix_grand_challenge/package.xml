@@ -71,6 +71,10 @@
   <build_depend>actionlib_msgs</build_depend>
   <build_depend>control_msgs</build_depend>
   <depend>std_srvs</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>cv_bridge</depend>
 
 
   <exec_depend>pluginlib</exec_depend>
