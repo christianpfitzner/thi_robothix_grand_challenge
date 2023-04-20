@@ -21,6 +21,10 @@ find_package(catkin REQUIRED
     actionlib_msgs
     control_msgs
     std_srvs
+    rospy
+    std_msgs
+    sensor_msgs
+    cv_bridge
 )
 
 find_package(Eigen3 REQUIRED)
@@ -42,6 +46,10 @@ catkin_package(
     actionlib_msgs
     control_msgs
     std_srvs
+    rospy
+    cv_bridge
+    std_msgs
+    sensor_msgs
   DEPENDS
     EIGEN3
 )
@@ -56,6 +64,12 @@ target_link_libraries(press_button ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 add_executable(detect_box src/detect_box.cpp)
 target_link_libraries(detect_box ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+
+catkin_install_python(PROGRAMS
+    scripts/target_second_arrow_V2.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 # add_executable(pick_and_place_collision src/pick_and_place_collision.cpp)
 # target_link_libraries(pick_and_place_collision ${catkin_LIBRARIES} ${Boost_LIBRARIES})
