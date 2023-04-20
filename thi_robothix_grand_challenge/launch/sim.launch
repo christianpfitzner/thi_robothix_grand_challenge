@@ -1,6 +1,6 @@
 <launch>
     
-    <include file="$(find thi_robothix_grand_challenge)/launch/meta.launch"/>
+    <include file="$(find thi_robothix_grand_challenge_2023)/launch/meta.launch"/>
 
 
     <include file="$(find panda_moveit_config)/launch/demo.launch" pass_all_args="true">

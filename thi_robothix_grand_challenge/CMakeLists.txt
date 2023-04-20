@@ -30,10 +30,6 @@ find_package(catkin REQUIRED
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 
-generate_messages(
-  DEPENDENCIES actionlib_msgs std_msgs trajectory_msgs control_msgs  # Or other packages containing msgs
-)
-
 catkin_package(
   LIBRARIES
   INCLUDE_DIRS include
@@ -56,15 +52,8 @@ catkin_package(
 
 include_directories(include SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
 
-add_executable(pick_and_place_tutorial_lsg        src/pick_and_place_lsg.cpp)
-target_link_libraries(pick_and_place_tutorial_lsg ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
-add_executable(press_button src/press_button.cpp)
-target_link_libraries(press_button ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
-add_executable(detect_box src/detect_box.cpp)
-target_link_libraries(detect_box ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
+add_executable(thi_robothix_grand_challenge_node        src/thi_robothix_grand_challenge_node.cpp)
+target_link_libraries(thi_robothix_grand_challenge_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 catkin_install_python(PROGRAMS
     scripts/target_second_arrow_V2.py

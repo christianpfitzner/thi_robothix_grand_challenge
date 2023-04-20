@@ -70,8 +70,11 @@
   <build_depend>tf2_convert</build_depend>
   <build_depend>actionlib_msgs</build_depend>
   <build_depend>control_msgs</build_depend>
+  <depend>rospy</depend>
   <depend>std_srvs</depend>
-
+  <depend>cv_bridge</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
 
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>moveit_core</exec_depend>
