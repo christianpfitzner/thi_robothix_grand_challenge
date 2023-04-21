@@ -90,7 +90,7 @@ inline void detect_box(std::unique_ptr<MoveItArmInterface> arm_interface, std::u
 
 void Task_A::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
 {
-    
+    arm_inteface.
 }
 
 void Task_B::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
@@ -109,6 +109,11 @@ void Task_D::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_
 }
 
 void Task_E::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
+{
+    
+}
+
+void Task_F::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
 {
     
 }
