@@ -15,7 +15,7 @@ inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_ord
     std::vector<std::unique_ptr<TaskClass>> tasks;
     tasks.resize(5);
 
-    if(task_order.size() != 5)
+    if(task_order.size() != 6)
     {
         ROS_ERROR("Invalid task order.");
     }
@@ -41,6 +41,9 @@ inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_ord
                 break;
             case 'E':
                 tasks.push_back(std::make_unique<Task_E>());
+                break;
+            case 'F':
+                tasks.push_back(std::make_unique<Task_F>());
                 break;
             default:
                 ROS_ERROR_STREAM("Invalid task order");
@@ -89,7 +92,9 @@ inline void detect_box(std::unique_ptr<MoveItArmInterface> arm_interface, std::u
 
 void Task_A::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
 {
-    //arm_inteface.
+    arm_interface->approachFramePTP("box_button_blue",0);
+    arm_interface->moveToFrameLinear("box_button_blue");
+    arm_interface->approachFrameLinear("box_button_blue",0.1);
 }
 
 void Task_B::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
@@ -119,6 +124,7 @@ void Task_F::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_
 
 int main(int argc, char **argv)
 {
+
     ros::init(argc, argv, "thi_robothix_grand_challenge_node");
     ros::NodeHandle nh;
 
@@ -133,7 +139,7 @@ int main(int argc, char **argv)
   │ Create Tasks                                                                │
   └─────────────────────────────────────────────────────────────────────────────┘
 */
-    std::string task_order = "ABCDE";
+    std::string task_order = "ABCDEF";
     if(!nh.getParam("/task_order", task_order))
         ROS_ERROR("Could not get task order from parameter server. Using default task order.");
 
@@ -164,8 +170,6 @@ int main(int argc, char **argv)
     //     arm_interface->moveToHome();
     //     return 1;
     // }
-
-    ROS_INFO("Detected box.");
 
 /*
   ┌─────────────────────────────────────────────────────────────────────────────┐
