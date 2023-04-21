@@ -21,7 +21,7 @@
         {
             "label": "roslaunch sim.launch",
             "type": "shell",
-            "command": "cd ${workspaceFolder} && cd ../.. && source devel/setup.bash && roslaunch ${workspaceFolder}/thi_robothix_grand_challenge/launch/sim.launch",
+            "command": "cd ${workspaceFolder} && cd ../.. && source devel/setup.bash && roslaunch ${workspaceFolder}/thi_robothix_grand_challenge/launch/sim.launch task_order:=${input:task_order}",
             "problemMatcher": ["$roslaunch"],
             "isBackground": true,
             "icon": {"color": "terminal.ansiWhite", "id": "rocket"},
@@ -36,5 +36,13 @@
             "problemMatcher": [],
             "icon": {"color": "terminal.ansiGreen", "id": "run"},
         }   
+    ],
+    "inputs": [
+        {
+            "id": "task_order",
+            "default": "ABCDE",
+            "type": "promptString",
+            "description": "Enter the task order"
+        }
     ]
 }
