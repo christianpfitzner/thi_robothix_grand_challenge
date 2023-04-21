@@ -70,6 +70,8 @@
   <build_depend>tf2_convert</build_depend>
   <build_depend>actionlib_msgs</build_depend>
   <build_depend>control_msgs</build_depend>
+  <build_depend>franka_gripper</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
   <depend>std_srvs</depend>
   <depend>rospy</depend>
   <depend>std_msgs</depend>
@@ -101,8 +103,10 @@
   <exec_depend>nodelet</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>actionlib_msgs</exec_depend>
+  <exec_depend>franka_gripper</exec_depend>
   <exec_depend>control_msgs</exec_depend>
   <exec_depend>message_generation</exec_depend>
+  <exec_depend>actionlib_msgs</exec_depend>
   
   <!-- The export tag contains other, unspecified, tags -->
   <export>

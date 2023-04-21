@@ -25,13 +25,14 @@ find_package(catkin REQUIRED
     std_msgs
     sensor_msgs
     cv_bridge
+    franka_gripper
 )
 
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 
 generate_messages(
-  DEPENDENCIES actionlib_msgs std_msgs trajectory_msgs control_msgs  # Or other packages containing msgs
+  DEPENDENCIES actionlib_msgs std_msgs trajectory_msgs control_msgs  franka_gripper # Or other packages containing msgs
 )
 
 catkin_package(
@@ -50,6 +51,8 @@ catkin_package(
     cv_bridge
     std_msgs
     sensor_msgs
+    franka_gripper
+    actionlib_msgs
   DEPENDS
     EIGEN3
 )
