@@ -10,9 +10,9 @@
 #include <stdexcept>
 #include <thread>
 
-inline std::vector<std::shared_ptr<TaskClass>> create_tasks(std::string task_order)
+inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_order)
 {
-    std::vector<std::shared_ptr<TaskClass>> tasks;
+    std::vector<std::unique_ptr<TaskClass>> tasks;
     tasks.resize(5);
 
     if(task_order.size() != 5)
@@ -28,19 +28,19 @@ inline std::vector<std::shared_ptr<TaskClass>> create_tasks(std::string task_ord
         switch(c)
         {
             case 'A':
-                tasks.push_back(std::make_shared<Task_A>());
+                tasks.push_back(std::make_unique<Task_A>());
                 break;
             case 'B':
-                tasks.push_back(std::make_shared<Task_B>());
+                tasks.push_back(std::make_unique<Task_B>());
                 break;
             case 'C':
-                tasks.push_back(std::make_shared<Task_C>());
+                tasks.push_back(std::make_unique<Task_C>());
                 break;
             case 'D':
-                tasks.push_back(std::make_shared<Task_D>());
+                tasks.push_back(std::make_unique<Task_D>());
                 break;
             case 'E':
-                tasks.push_back(std::make_shared<Task_E>());
+                tasks.push_back(std::make_unique<Task_E>());
                 break;
             default:
                 ROS_ERROR_STREAM("Invalid task order");
@@ -78,7 +78,6 @@ void trigger_box_detection(std::shared_ptr<ros::NodeHandle> nh)
 
 inline void detect_box(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
-    auto box_detected = std::make_shared<bool>(false);
     std::thread trigger_box_detection_thread(trigger_box_detection, nh);
 
     // Close gripper
@@ -90,7 +89,6 @@ inline void detect_box(std::unique_ptr<MoveItArmInterface> arm_interface, std::u
 
 void Task_A::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
 {
-    this->pre_run();
     //arm_inteface.
 }
 
@@ -124,6 +122,9 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "thi_robothix_grand_challenge_node");
     ros::NodeHandle nh;
 
+    ros::AsyncSpinner spinner(1);
+    spinner.start();
+
     std::unique_ptr<MoveItArmInterface> arm_interface = std::make_unique<MoveItArmInterface>(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 1, 1);
     std::unique_ptr<MoveItGripperInterface> gripper_interface = std::make_unique<MoveItGripperInterface>(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 0.5, 0.3, 0.1);
 
@@ -136,7 +137,8 @@ int main(int argc, char **argv)
     if(!nh.getParam("/task_order", task_order))
         ROS_ERROR("Could not get task order from parameter server. Using default task order.");
 
-    std::vector<std::shared_ptr<TaskClass>> tasks = create_tasks(task_order);
+    std::vector<std::unique_ptr<TaskClass>> tasks = create_tasks(task_order);
+    ROS_INFO_STREAM("Created " << tasks.size() << " tasks.");
 
 /* 
   ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -152,16 +154,18 @@ int main(int argc, char **argv)
   └─────────────────────────────────────────────────────────────────────────────┘
  */
     arm_interface->moveToHome();
-    try
-    {
-        detect_box(std::move(arm_interface), std::move(gripper_interface), std::make_shared<ros::NodeHandle>(nh));
-    }
-    catch(const std::runtime_error &e)
-    {
-        ROS_ERROR_STREAM("Could not detect box. " << e.what());
-        arm_interface->moveToHome();
-        return 1;
-    }
+    // try
+    // {
+    //     detect_box(std::move(arm_interface), std::move(gripper_interface), std::make_shared<ros::NodeHandle>(nh));
+    // }
+    // catch(const std::runtime_error &e)
+    // {
+    //     ROS_ERROR_STREAM("Could not detect box. " << e.what());
+    //     arm_interface->moveToHome();
+    //     return 1;
+    // }
+
+    ROS_INFO("Detected box.");
 
 /*
   ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -170,7 +174,8 @@ int main(int argc, char **argv)
 */
     for(auto &&task : tasks)
     {
-        task->run(std::move(arm_interface), std::move(gripper_interface));
+        // ROS_INFO_STREAM("Trying to run task " << task.get()->_task_name);
+        // task->run(std::move(arm_interface), std::move(gripper_interface));
     }
 
 /* 
