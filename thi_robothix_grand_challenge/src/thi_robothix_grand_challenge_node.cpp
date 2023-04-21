@@ -146,7 +146,16 @@ int main(int argc, char **argv)
   └─────────────────────────────────────────────────────────────────────────────┘
  */
     arm_interface->moveToHome();
-    detect_box(std::move(arm_interface), std::move(gripper_interface), std::make_shared<ros::NodeHandle>(nh));
+    try
+    {
+        detect_box(std::move(arm_interface), std::move(gripper_interface), std::make_shared<ros::NodeHandle>(nh));
+    }
+    catch(const std::runtime_error &e)
+    {
+        ROS_ERROR_STREAM("Could not detect box. " << e.what());
+        arm_interface->moveToHome();
+        return 1;
+    }
 
 /*
   ┌─────────────────────────────────────────────────────────────────────────────┐
