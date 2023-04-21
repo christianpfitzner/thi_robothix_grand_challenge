@@ -2,16 +2,28 @@
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit_visual_tools/moveit_visual_tools.h>
 
-
 #include <tf2_ros/transform_listener.h>
 #include <geometry_msgs/PoseStamped.h> 
+
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
+#include <actionlib/client/simple_action_client.h>
+#include <actionlib/client/terminal_state.h>
+#include <franka_gripper/GraspAction.h>
 
 
 moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm;
 moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper;
 
 
-
+bool moveToPose(moveit::planning_interface::MoveGroupInterface* mgi, geometry_msgs::PoseStamped &pose)
+{
+  bool success = false; 
+  mgi->setPoseTarget(pose);
+  success = (mgi->plan(my_plan_arm) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  if(success) mgi->move();
+  return success; 
+}
 
 
 bool moveToFrame( moveit::planning_interface::MoveGroupInterface* mgi, std::string frame_id)
@@ -141,6 +153,12 @@ int main(int argc, char** argv)
   // move_group_interface_gripper.setGoalJointTolerance(0.02);
 
 
+  // actionlib::SimpleActionClient<franka_gripper::GraspActionGoal> grasp_client("/franka_gripper/grasp", true);
+  actionlib::SimpleActionClient<franka_gripper::GraspAction> ac("franka_gripper/grasp", true);
+  ac.waitForServer();
+
+
+
 
 
   namespace rvt = rviz_visual_tools;
@@ -209,20 +227,98 @@ int main(int argc, char** argv)
 
       //move commands
       
-      openGripper(&move_group_interface_gripper);
       closeGripper(&move_group_interface_gripper);
+      openGripper(&move_group_interface_gripper);
 
-      moveToFrame(&move_group_interface_arm, "p4" );
-      setGripperWidth(&move_group_interface_gripper, 0.025);
-      moveToFrame(&move_group_interface_arm, "p5" );
-      moveToFrame(&move_group_interface_arm, "p6" );
-      setGripperWidth(&move_group_interface_gripper, 0.00425);
-      moveToFrame(&move_group_interface_arm, "p5" );
-      moveToFrame(&move_group_interface_arm, "p4" );
-      moveToFrame(&move_group_interface_arm, "p5" );
-      moveToFrame(&move_group_interface_arm, "p6" );
-      setGripperWidth(&move_group_interface_gripper, 0.025);
-      moveToFrame(&move_group_interface_arm, "p4" );
+
+      tf2_ros::Buffer tfBuffer;
+      tf2_ros::TransformListener tfListener(tfBuffer);  
+      geometry_msgs::TransformStamped transformStamped;
+      ros::Duration(1.0).sleep();
+      try
+      {
+        transformStamped = tfBuffer.lookupTransform("panda_link0", "fiducial_0", ros::Time(0));
+      }
+      catch (tf2::TransformException &ex) 
+      {
+        ROS_WARN("%s",ex.what());
+        ros::Duration(1.0).sleep();
+
+        return success; 
+      }
+
+      geometry_msgs::PoseStamped target; 
+      target.header.frame_id    = "panda_link0";
+      target.pose.position.x    = transformStamped.transform.translation.x + 0.01; 
+      target.pose.position.y    = transformStamped.transform.translation.y; 
+      target.pose.position.z    = transformStamped.transform.translation.z - 0.04; 
+
+      tf2::Quaternion q;
+      q.setRPY(3.14, 0, 0);
+      target.pose.orientation = tf2::toMsg(q);
+
+      geometry_msgs::PoseStamped p1 = target;
+      p1.pose.position.z += 0.20;
+
+      moveToPose(&move_group_interface_arm, p1);
+
+
+
+
+
+            ros::Duration(1.0).sleep();
+      try
+      {
+        transformStamped = tfBuffer.lookupTransform("panda_link0", "fiducial_0", ros::Time(0));
+      }
+      catch (tf2::TransformException &ex) 
+      {
+        ROS_WARN("%s",ex.what());
+        ros::Duration(1.0).sleep();
+
+        return success; 
+      }
+
+      // geometry_msgs::PoseStamped target; 
+      target.header.frame_id    = "panda_link0";
+      target.pose.position.x    = transformStamped.transform.translation.x + 0.01; 
+      target.pose.position.y    = transformStamped.transform.translation.y ; 
+      target.pose.position.z    = transformStamped.transform.translation.z - 0.01; 
+
+      // tf2::Quaternion q;
+      // q.setRPY(3.14, 0, 0);
+      // target.pose.orientation = tf2::toMsg(q);
+
+
+
+
+
+      moveToPose(&move_group_interface_arm, target);
+
+
+
+
+
+
+
+      franka_gripper::GraspGoal grasp_action; 
+      grasp_action.width = 0.065*0.5; 
+      grasp_action.speed = 1.0; 
+      grasp_action.force = 6; 
+      grasp_action.epsilon.inner = 0.01;  // Maximum tolerated deviation when the actual grasped width is
+      grasp_action.epsilon.outer = 0.01;
+
+      ac.sendGoal(grasp_action); 
+
+      ac.waitForResult(ros::Duration(4.0)); 
+      if(ac.getResult()->success)
+      {
+        ROS_ERROR_STREAM("yeah!!!!");
+      }
+
+      // setGripperWidth(&move_group_interface_gripper, 0.064);   
+      moveToPose(&move_group_interface_arm, p1);
+      openGripper(&move_group_interface_gripper); 
       
       // openGripper(    &move_group_interface_gripper); 
 
