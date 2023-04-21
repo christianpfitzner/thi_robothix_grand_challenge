@@ -12,7 +12,7 @@ class TaskClass
     TaskClass(std::string task_name);
     ~TaskClass() = default;
     virtual void pre_run();
-    virtual void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface) = 0;
+    virtual void run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface) = 0;
   private:
     std::string _task_name = "Parent Task";
 };
