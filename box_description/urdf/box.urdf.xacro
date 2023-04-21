@@ -128,11 +128,10 @@
 
 <!-- Slider -->
 
-<joint name="box_slider_joint" type="prismatic">
+<joint name="box_slider_joint" type="fixed">
   <parent link="box_corner_3"/>
   <child link="box_slider"/>
   <origin rpy="0 ${pi} ${pi}" xyz="-0.0425 -0.0675 ${box_len_z}"/>
-  <limit effort="1000.0" lower="-0.0215" upper="0.0215" velocity="0.5"/>
 </joint>
 <link name="box_slider">
   <visual>
