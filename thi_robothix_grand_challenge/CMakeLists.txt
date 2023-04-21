@@ -73,6 +73,7 @@ catkin_install_python(PROGRAMS
     scripts/target_second_arrow_V2.py
     scripts/find_box_aprox.py
     scripts/box_aprox_detection.py
+    scripts/box_aprox_detection_V2.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
