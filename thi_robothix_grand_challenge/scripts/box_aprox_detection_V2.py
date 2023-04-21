@@ -85,10 +85,10 @@ def find_blue_botton(i_hsv):
 
 def find_door(i_hsv):
     ### HSV FILTER: Target is lue botton
-    low_HSV     = (100, 10, 95)                             # Note, opencv HSVmin = 0
-    high_HSV    = (130, 65, 150)                            # Hmax = 180, SVmax = 255
+    low_HSV     = (95, 5, 60)                             # Note, opencv HSVmin = 0
+    high_HSV    = (135, 70, 140)                            # Hmax = 180, SVmax = 255
     i_hsv_door       = cv2.inRange(i_hsv, low_HSV, high_HSV)
-    #cv2.imshow("inRange for door", i_hsv_door)
+    cv2.imshow("inRange for door", i_hsv_door)
 
 
     ### MORPHOLOGY OPERATIONS
@@ -97,18 +97,18 @@ def find_door(i_hsv):
     ksize_open = (5, 5)
     kernel_open = cv2.getStructuringElement(shape_open, ksize_open)
     i_open_door = cv2.morphologyEx(i_hsv_door, cv2.MORPH_OPEN, kernel_open)
-    #cv2.imshow("after opening", i_open_door)
+    cv2.imshow("after opening", i_open_door)
     # CLOSING
     shape_close = cv2.MORPH_ELLIPSE
     ksize_close = (9, 9)
     kernel_close = cv2.getStructuringElement(shape_close, ksize_close)
     i_close_door = cv2.morphologyEx(i_open_door, cv2.MORPH_CLOSE, kernel_close)
-    #cv2.imshow("after closing", i_close_door)
+    cv2.imshow("after closing", i_close_door)
 
     ### CONNECTIONS
     connectivity = 4 #choose between 4 or 8 for connectivity type
     num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(i_close_door, connectivity, cv2.CV_16S)
-    #print("Number of connections found= %s" % (num_labels - 1))     # background has label=0
+    print("Number of connections found= %s" % (num_labels - 1))     # background has label=0
     # Initialize a new image to store connections after filtering
     output = np.zeros(i_hsv_door.shape, dtype="uint8")
 
@@ -117,11 +117,11 @@ def find_door(i_hsv):
     target_label = -1
     for i in range(1, num_labels):
         area = stats[i, cv2.CC_STAT_AREA]
-        # x = round(centroids[i, 0])
-        # y = round(centroids[i, 1])
-        # width_box = stats[i, cv2.CC_STAT_WIDTH]
-        # height_box = stats[i, cv2.CC_STAT_HEIGHT]
-        #print("Connection=%s, [area=%s, x=%s, y=%s]" % (i, area, x, y))
+        x = round(centroids[i, 0])
+        y = round(centroids[i, 1])
+        width_box = stats[i, cv2.CC_STAT_WIDTH]
+        height_box = stats[i, cv2.CC_STAT_HEIGHT]
+        print("Connection=%s, [area=%s, x=%s, y=%s]" % (i, area, x, y))
         
         # FILTER
         if (area > 5000) & (area < 15000):
@@ -131,8 +131,8 @@ def find_door(i_hsv):
             square_ratio = width_box/height_box
 
             if (square_ratio > 0.85) & (square_ratio < 1.15):
-                # print("After filter: Connection=%s, [area=%s, x=%s, y=%s, width= %s, heigth= %s]" % (i, area, x, y, width_box, height_box))
-                # print(square_ratio)
+                print("After filter: Connection=%s, [area=%s, x=%s, y=%s, width= %s, heigth= %s]" % (i, area, x, y, width_box, height_box))
+                print(square_ratio)
                 componentMask = (labels == i).astype("uint8") * 255
                 output = cv2.bitwise_or(output, componentMask)
                 target_label = i
@@ -183,7 +183,7 @@ def image_callback(img_msg):
     print("\n")
 
 
-    cv2.waitKey(250)
+    cv2.waitKey(500)
 
 # Initialize a subscriber to the "/camera/color/image_raw" toic with the function "image_callback" as a callback
 sub_image = rospy.Subscriber("/camera/color/image_raw", Image, image_callback)
