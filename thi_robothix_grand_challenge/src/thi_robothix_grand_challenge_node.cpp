@@ -13,7 +13,7 @@
 inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_order)
 {
     std::vector<std::unique_ptr<TaskClass>> tasks;
-    tasks.resize(5);
+    tasks.reserve(6);
 
     if(task_order.size() != 6)
     {
@@ -178,8 +178,8 @@ int main(int argc, char **argv)
 */
     for(auto &&task : tasks)
     {
-        // ROS_INFO_STREAM("Trying to run task " << task.get()->_task_name);
-        // task->run(std::move(arm_interface), std::move(gripper_interface));
+        ROS_INFO_STREAM("Trying to run task " << task->_task_name);
+        task->run(std::move(arm_interface), std::move(gripper_interface));
     }
 
 /* 
