@@ -79,45 +79,45 @@ void trigger_box_detection(std::shared_ptr<ros::NodeHandle> nh)
     }
 }
 
-inline void detect_box(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
+inline void detect_box(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     std::thread trigger_box_detection_thread(trigger_box_detection, nh);
 
     // Close gripper
-    gripper_interface->closeGripper();
+    gripper_interface.closeGripper();
 
     // wait for box detection
     trigger_box_detection_thread.join();
 }
 
-void Task_A::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
+void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
     arm_interface->approachFramePTP("box_button_blue",0);
     arm_interface->moveToFrameLinear("box_button_blue");
     arm_interface->approachFrameLinear("box_button_blue",0.1);
 }
 
-void Task_B::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
+void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
     
 }
 
-void Task_C::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
+void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
     
 }
 
-void Task_D::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
+void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
     
 }
 
-void Task_E::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
+void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
     
 }
 
-void Task_F::run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface)
+void Task_F::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
     
 }
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
   │ Move To Home Position                                                       │
   └─────────────────────────────────────────────────────────────────────────────┘
  */
-    arm_interface->moveToHome();
+    arm_interface.moveToHome();
     ROS_INFO("Finished all tasks.");
 
     return 0;

@@ -128,12 +128,43 @@
 
 <!-- Slider -->
 
-<joint name="box_slider_joint" type="fixed">
+<joint name="box_slider_joint_start" type="fixed">
   <parent link="box_corner_3"/>
-  <child link="box_slider"/>
-  <origin rpy="0 ${pi} ${pi}" xyz="-0.0425 -0.0675 ${box_len_z}"/>
+  <child link="box_slider_start"/>
+  <!--Original x:-0.0425  y: -0.0675-->
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.021 -0.0675 ${box_len_z}"/>
 </joint>
-<link name="box_slider">
+<link name="box_slider_start">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0.005"/>
+    <geometry>
+      <box size="0.007 0.005796 0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+
+<joint name="box_slider_joint_middle" type="fixed">
+  <parent link="box_corner_3"/>
+  <child link="box_slider_middle"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.0425 -0.0675  ${box_len_z}"/>
+</joint>
+<link name="box_slider_middle">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0.005"/>
+    <geometry>
+      <box size="0.007 0.005796 0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+
+<joint name="box_slider_joint_stop" type="fixed">
+  <parent link="box_corner_3"/>
+  <child link="box_slider_stop"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.064 -0.0675 ${box_len_z}"/>
+</joint>
+<link name="box_slider_stop">
   <visual>
     <origin rpy="0 0 0" xyz="0 0 0.005"/>
     <geometry>
