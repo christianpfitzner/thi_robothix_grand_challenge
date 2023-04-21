@@ -21,17 +21,6 @@ def pose_tf_broadcast(msg):
                      "box_base_link",
                      "world")
 
-
-# Input from 
-def point_input():
-
-    x = float(input("  x: "))
-    y = float(input("  y: "))
-    z = float(input("  z: "))
-
-    return np.array([x, y, z])
-
-
 def calc_origin(p1, p2, p3):
     # Calculate the vector from p1 to p2
     v1 = p2 - p1
@@ -68,17 +57,17 @@ if __name__ == "__main__":
     # Initialize the node
     rospy.init_node('box_position_publisher_node')
 
-    # Get the 3 points from the user
-    print("Point 1:")
-    p1 = point_input()
+    # get points from parameter server
+    p1 = rospy.get_param("/box_position_publisher/p1")
+    p2 = rospy.get_param("/box_position_publisher/p2")
+    p3 = rospy.get_param("/box_position_publisher/p3")
 
-    print("Point 2:")
-    p2 = point_input()
+    # split strings into numpy arrays
+    p1 = np.fromstring(p1, dtype=float, sep=' ')
+    p2 = np.fromstring(p2, dtype=float, sep=' ')
+    p3 = np.fromstring(p3, dtype=float, sep=' ')
 
-    print("Point 3:")
-    p3 = point_input()
-
-    print("Origin: ", calc_origin(p1, p2, p3))
+    rospy.loginfo("Origin: ", calc_origin(p1, p2, p3))
 
     # Create a message
     msg = PoseStamped()
