@@ -9,22 +9,23 @@
 class TaskClass
 {
   public:
-    TaskClass();
+    TaskClass(std::string task_name);
     ~TaskClass() = default;
-    std::string task_name;
     virtual void pre_run();
     virtual void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface) = 0;
+  private:
+    std::string _task_name = "Parent Task";
 };
 
-TaskClass::TaskClass()
+TaskClass::TaskClass(std::string task_name) : _task_name(task_name)
 {
-    ROS_INFO_STREAM("Initializing " << task_name);
+    ROS_INFO_STREAM("Initializing " << _task_name);
 }
 
 void TaskClass::pre_run()
 {
     ROS_INFO("\n\n--------------------");
-    ROS_INFO_STREAM("Running " << task_name);
+    ROS_INFO_STREAM("Running " << _task_name);
 }
 
 #endif

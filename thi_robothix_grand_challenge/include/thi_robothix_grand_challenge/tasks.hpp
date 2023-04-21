@@ -8,49 +8,36 @@
 class Task_A : public TaskClass
 {
   public:
-    using TaskClass::TaskClass;
+    Task_A() : TaskClass("Task_A: Slider") {};
     void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface);
-
-    std::string task_name = "Task_A: Slider";
 };
 
 class Task_B : public TaskClass
 {
   public:
-    using TaskClass::TaskClass;
-
+    Task_B() : TaskClass("Task_B: TODO") {};
     void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface);
-
-    std::string task_name = "Task_B: TODO";
-
 };
 
 class Task_C : public TaskClass
 {
   public:
-    using TaskClass::TaskClass;
+    Task_C() : TaskClass("Task_C: TODO") {};
     void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface);
-
-    std::string task_name = "Task_C: TODO";
-
 };
 
 class Task_D : public TaskClass
 {
   public:
-    using TaskClass::TaskClass;
+    Task_D() : TaskClass("Task_D: TODO") {};
     void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface);
-
-    std::string task_name = "Task_D: TODO";
 };
 
 class Task_E : public TaskClass
 {
   public:
-    using TaskClass::TaskClass;
+    Task_E() : TaskClass("Task_E: TODO") {};
     void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface);
-
-    std::string task_name = "Task_E: TODO";
 };
 
 
