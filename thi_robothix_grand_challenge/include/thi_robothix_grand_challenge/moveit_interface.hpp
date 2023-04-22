@@ -23,81 +23,36 @@ class MoveItArmInterface
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
     };
 
-    void approachFrameLinear(std::string frame_id, double z_offset_m)
-    {
-        auto offset = geometry_msgs::Pose();
-        offset.position.x = 0;
-        offset.position.y = 0;
-        offset.position.z = -z_offset_m;
-        offset.orientation.x = 0;
-        offset.orientation.y = 0;
-        offset.orientation.z = 0;
-        offset.orientation.w = 1;
-        moveToFrameLinear(frame_id, offset);
-    }
-
-    void approachFrameLinear(std::string frame_id, double z_offset_m, double z_orientation)
+    void moveToFrameLinear(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0)
     {
         tf2::Quaternion q;
-        q.setRPY(0,0,z_orientation);
+        q.setRPY(0,0,z_orientation_rad);
 
-        auto offset = geometry_msgs::Pose();
+        geometry_msgs::Pose offset;
         offset.position.x = 0;
         offset.position.y = 0;
-        offset.position.z = -z_offset_m;
-        offset.orientation = q;
+        offset.position.z = z_offset_m;
+        offset.orientation.x = q.x();
+        offset.orientation.y = q.y();
+        offset.orientation.z = q.z();
+        offset.orientation.w = q.w();
         moveToFrameLinear(frame_id, offset);
     }
+    
 
-    void approachFramePTP(std::string frame_id, double z_offset_m)
-    {
-        auto offset = geometry_msgs::Pose();
-        offset.position.x = 0;
-        offset.position.y = 0;
-        offset.position.z = -z_offset_m;
-        offset.orientation.x = 0;
-        offset.orientation.y = 0;
-        offset.orientation.z = 0;
-        offset.orientation.w = 1;
-        moveToFramePTP(frame_id, offset);
-    }
-
-    void approachFramePTP(std::string frame_id, double z_offset_m, double z_orientation)
+    void moveToFramePTP(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0)
     {
         tf2::Quaternion q;
-        q.setRPY(0,0,z_orientation);
+        q.setRPY(0,0,z_orientation_rad);
 
-        auto offset = geometry_msgs::Pose();
+        geometry_msgs::Pose offset;
         offset.position.x = 0;
         offset.position.y = 0;
-        offset.position.z = -z_offset_m;
-        offset.orientation = q;
-        moveToFramePTP(frame_id, offset);
-    }
-
-    void moveToFrameLinear(std::string frame_id)
-    {
-        auto offset = geometry_msgs::Pose();
-        offset.position.x = 0;
-        offset.position.y = 0;
-        offset.position.z = 0;
-        offset.orientation.x = 0;
-        offset.orientation.y = 0;
-        offset.orientation.z = 0;
-        offset.orientation.w = 1;
-        moveToFrameLinear(frame_id, offset);
-    }
-
-    void moveToFramePTP(std::string frame_id)
-    {
-        auto offset = geometry_msgs::Pose();
-        offset.position.x = 0;
-        offset.position.y = 0;
-        offset.position.z = 0;
-        offset.orientation.x = 0;
-        offset.orientation.y = 0;
-        offset.orientation.z = 0;
-        offset.orientation.w = 1;
+        offset.position.z = z_offset_m;
+        offset.orientation.x = q.x();
+        offset.orientation.y = q.y();
+        offset.orientation.z = q.z();
+        offset.orientation.w = q.w();
         moveToFramePTP(frame_id, offset);
     }
 
