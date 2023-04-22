@@ -27,11 +27,11 @@ class MoveItArmInterface
         auto offset = geometry_msgs::Pose();
         offset.position.x = 0;
         offset.position.y = 0;
-        offset.position.z = z_offset_m;
+        offset.position.z = -z_offset_m;
         offset.orientation.x = 0;
         offset.orientation.y = 0;
         offset.orientation.z = 0;
-        offset.orientation.w = 0;
+        offset.orientation.w = 1;
         moveToFrameLinear(frame_id, offset);
     }
 
@@ -40,11 +40,11 @@ class MoveItArmInterface
         auto offset = geometry_msgs::Pose();
         offset.position.x = 0;
         offset.position.y = 0;
-        offset.position.z = z_offset_m;
+        offset.position.z = -z_offset_m;
         offset.orientation.x = 0;
         offset.orientation.y = 0;
         offset.orientation.z = 0;
-        offset.orientation.w = 0;
+        offset.orientation.w = 1;
         moveToFramePTP(frame_id, offset);
     }
 
@@ -57,7 +57,7 @@ class MoveItArmInterface
         offset.orientation.x = 0;
         offset.orientation.y = 0;
         offset.orientation.z = 0;
-        offset.orientation.w = 0;
+        offset.orientation.w = 1;
         moveToFrameLinear(frame_id, offset);
     }
 
@@ -70,7 +70,7 @@ class MoveItArmInterface
         offset.orientation.x = 0;
         offset.orientation.y = 0;
         offset.orientation.z = 0;
-        offset.orientation.w = 0;
+        offset.orientation.w = 1;
         moveToFramePTP(frame_id, offset);
     }
 
@@ -86,30 +86,13 @@ class MoveItArmInterface
     {
         std::vector<geometry_msgs::Pose> waypoints;
 
-        geometry_msgs::Pose target_pose;
-        geometry_msgs::TransformStamped transformStamped;
+        geometry_msgs::PoseStamped target_pose_stamped;
+        target_pose_stamped.header.frame_id = frame_id;
+        target_pose_stamped.pose = offset;
 
-        tf2_ros::Buffer tfBuffer;
-        tf2_ros::TransformListener tfListener(tfBuffer);
-
-        ros::Duration(1.0).sleep();
-
-
-        // must be transformed from world and not
-        // from link0, because Pose is beign used here and not PoseStamped
-        transformStamped = tfBuffer.lookupTransform("world", frame_id, ros::Time(0));
-
-        geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
-        target_pose.position.x = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x + offset.position.x;
-        target_pose.position.y = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y + offset.position.y;
-        target_pose.position.z = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z + offset.position.z;
-        target_pose.orientation.w = transformStamped.transform.rotation.w; // * offset.orientation.w;
-        target_pose.orientation.x = transformStamped.transform.rotation.x; // * offset.orientation.x;
-        target_pose.orientation.y = transformStamped.transform.rotation.y; // * offset.orientation.y;
-        target_pose.orientation.z = transformStamped.transform.rotation.z; // * offset.orientation.z;
 
         // Add Target Pose to waypoints
-        waypoints.push_back(target_pose);
+        waypoints.push_back(target_pose_stamped.pose);
 
         /*We want the Cartesian path to be interpolated at a resolution of 1 cm which is
         why we will specify 0.01 as the max step in Cartesian translation.
@@ -120,6 +103,7 @@ class MoveItArmInterface
         moveit_msgs::RobotTrajectory trajectory;
         const double jump_threshold = 0.0;
         const double eef_step = 0.01;
+        mgi_->setPoseReferenceFrame(target_pose_stamped.header.frame_id);
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
 
         if (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
@@ -128,30 +112,15 @@ class MoveItArmInterface
 
     void moveToFramePTP(std::string frame_id, geometry_msgs::Pose & offset)
     {
-        geometry_msgs::TransformStamped transformStamped;
-
-        tf2_ros::Buffer tfBuffer;
-        tf2_ros::TransformListener tfListener(tfBuffer);
-
-        ros::Duration(1.0).sleep();
-
-        transformStamped = tfBuffer.lookupTransform("panda_link0", frame_id, ros::Time(0));
-
-        geometry_msgs::PoseStamped target_pose;
-        target_pose.header.frame_id = "panda_link0";
-
-        geometry_msgs::TransformStamped transform_hand_to_tcp = tfBuffer.lookupTransform("panda_hand", "panda_hand_tcp", ros::Time(0));
-
-        target_pose.pose.position.x = transformStamped.transform.translation.x + transform_hand_to_tcp.transform.translation.x + offset.position.x;
-        target_pose.pose.position.y = transformStamped.transform.translation.y + transform_hand_to_tcp.transform.translation.y + offset.position.y;
-        target_pose.pose.position.z = transformStamped.transform.translation.z + transform_hand_to_tcp.transform.translation.z + offset.position.z;
-        target_pose.pose.orientation.w = transformStamped.transform.rotation.w; // * offset.orientation.w;
-        target_pose.pose.orientation.x = transformStamped.transform.rotation.x; // * offset.orientation.x;
-        target_pose.pose.orientation.y = transformStamped.transform.rotation.y; // * offset.orientation.y;
-        target_pose.pose.orientation.z = transformStamped.transform.rotation.z; // * offset.orientation.z;
+        //ros::Duration(1.0).sleep();
 
 
-        mgi_->setPoseTarget(target_pose);
+        geometry_msgs::PoseStamped target_pose_stamped;
+        target_pose_stamped.header.frame_id = frame_id;
+        target_pose_stamped.pose = offset;
+
+
+        mgi_->setPoseTarget(target_pose_stamped, "panda_hand_tcp");
 
         if (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
             mgi_->move();
