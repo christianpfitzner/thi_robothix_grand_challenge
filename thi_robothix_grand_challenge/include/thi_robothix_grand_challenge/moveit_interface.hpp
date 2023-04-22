@@ -78,44 +78,42 @@ class MoveItArmInterface
     {
         std::vector<geometry_msgs::Pose> waypoints;
 
-        geometry_msgs::PoseStamped target_pose_stamped;
-        target_pose_stamped.header.frame_id = frame_id;
-        target_pose_stamped.pose = offset;
-
-
         // Add Target Pose to waypoints
-        waypoints.push_back(target_pose_stamped.pose);
+        waypoints.push_back(offset);
 
-        /*We want the Cartesian path to be interpolated at a resolution of 1 cm which is
-        why we will specify 0.01 as the max step in Cartesian translation.
-        We will specify the jump threshold as 0.0, effectively disabling it.
-        !!!! Warning - disabling the jump threshold while operating real hardware can cause large
-        unpredictable motions of redundant joints and could be a safety issue!!!*/
+        // We want the Cartesian path to be interpolated at a resolution of 1 cm which is
+        // why we will specify 0.01 as the max step in Cartesian translation.
 
         moveit_msgs::RobotTrajectory trajectory;
         const double jump_threshold = 0.5;
         const double eef_step = 0.01;
-        mgi_->setPoseReferenceFrame(target_pose_stamped.header.frame_id);
-        double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+        mgi_->setPoseReferenceFrame(frame_id);
+        double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, false);
 
         if (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
             mgi_->execute(trajectory);
+        else
+        {
+            ROS_ERROR("MoveItArmInterface::moveToFramePTP: Failed to plan to target pose");
+            throw std::runtime_error("MoveItArmInterface::moveToFramePTP: Failed to plan to target pose");
+        }
     }
 
     void moveToFramePTP(std::string frame_id, geometry_msgs::Pose & offset)
     {
-        //ros::Duration(1.0).sleep();
-
-
         geometry_msgs::PoseStamped target_pose_stamped;
         target_pose_stamped.header.frame_id = frame_id;
         target_pose_stamped.pose = offset;
-
 
         mgi_->setPoseTarget(target_pose_stamped, "panda_hand_tcp");
 
         if (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
             mgi_->move();
+        else
+        {
+            ROS_ERROR("MoveItArmInterface::moveToFramePTP: Failed to plan to target pose");
+            throw std::runtime_error("MoveItArmInterface::moveToFramePTP: Failed to plan to target pose");
+        }
     }
 
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
