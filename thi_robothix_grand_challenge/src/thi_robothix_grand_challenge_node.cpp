@@ -106,19 +106,38 @@ inline void detect_box(MoveItArmInterface& arm_interface, MoveItGripperInterface
 
 void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
-    arm_interface.approachFramePTP("box_button_blue",0);
+    gripper_interface.closeGripper();
+    arm_interface.approachFramePTP("box_button_blue",0.1);
     arm_interface.moveToFrameLinear("box_button_blue");
     arm_interface.approachFrameLinear("box_button_blue",0.1);
+    gripper_interface.openGripper();
 }
 
 void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
-    
+    arm_interface.approachFramePTP("box_slider_start",0.1);
+    gripper_interface.setGripperWidth(0.008);
+    arm_interface.changeMaxVelocityScalingFactor(0.05);
+    arm_interface.moveToFrameLinear("box_slider_start");
+    arm_interface.moveToFrameLinear("box_slider_stop");
+    arm_interface.moveToFrameLinear("box_slider_start");
+    arm_interface.changeMaxVelocityScalingFactor(1.0);
+    arm_interface.approachFrameLinear("box_slider_start",0.1); 
+    gripper_interface.openGripper();   
 }
 
 void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
-    
+    arm_interface.approachFramePTP("box_socket_black", 0.1);
+    arm_interface.moveToFrameLinear("box_socket_black");
+    arm_interface.changeMaxVelocityScalingFactor(0.1);
+    gripper_interface.closeGripper();
+    arm_interface.approachFrameLinear("box_socket_black", 0.05);
+    arm_interface.approachFramePTP("box_socket_red", 0.05);
+    arm_interface.moveToFrameLinear("box_socket_red");
+    gripper_interface.openGripper();
+    arm_interface.changeMaxVelocityScalingFactor(1);
+    arm_interface.approachFrameLinear("box_socket_red", 0.1);
 }
 
 void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
@@ -134,7 +153,11 @@ void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
 
 void Task_F::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
-    
+    gripper_interface.closeGripper();
+    arm_interface.approachFramePTP("box_button_red",0.1);
+    arm_interface.moveToFrameLinear("box_button_red");
+    arm_interface.approachFrameLinear("box_button_red",0.1);
+    gripper_interface.openGripper();
 }
 
 int main(int argc, char **argv)

@@ -80,6 +80,16 @@ class MoveItArmInterface
         moveToFramePTP("home");
     }
 
+    void changeMaxVelocityScalingFactor(double max_vel_scale_factor)
+    {
+        mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
+    }
+
+    void changeMaxAccelerationScalingFactor(double max_acc_scale_factor)
+    {
+        mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
+    }
+
   private:
 
     void moveToFrameLinear(std::string frame_id, geometry_msgs::Pose & offset)
