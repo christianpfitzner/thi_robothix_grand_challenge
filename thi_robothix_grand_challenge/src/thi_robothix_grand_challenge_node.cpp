@@ -92,9 +92,9 @@ inline void detect_box(MoveItArmInterface& arm_interface, MoveItGripperInterface
 
 void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
-    arm_interface->approachFramePTP("box_button_blue",0);
-    arm_interface->moveToFrameLinear("box_button_blue");
-    arm_interface->approachFrameLinear("box_button_blue",0.1);
+    arm_interface.approachFramePTP("box_button_blue",0);
+    arm_interface.moveToFrameLinear("box_button_blue");
+    arm_interface.approachFrameLinear("box_button_blue",0.1);
 }
 
 void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
@@ -131,8 +131,8 @@ int main(int argc, char **argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    std::unique_ptr<MoveItArmInterface> arm_interface = std::make_unique<MoveItArmInterface>(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 1, 1);
-    std::unique_ptr<MoveItGripperInterface> gripper_interface = std::make_unique<MoveItGripperInterface>(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 0.5, 0.3, 0.1);
+    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 1, 1);
+    MoveItGripperInterface gripper_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 0.5, 0.3, 0.1);
 
 /* 
   ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
   │ Detect Box & Get to Start Position                                          │
   └─────────────────────────────────────────────────────────────────────────────┘
  */
-    arm_interface->moveToHome();
+    arm_interface.moveToHome();
     // try
     // {
     //     detect_box(std::move(arm_interface), std::move(gripper_interface), std::make_shared<ros::NodeHandle>(nh));
@@ -179,7 +179,7 @@ int main(int argc, char **argv)
     for(auto &&task : tasks)
     {
         ROS_INFO_STREAM("Trying to run task " << task->_task_name);
-        task->run(std::move(arm_interface), std::move(gripper_interface));
+        task->run(arm_interface, gripper_interface);
     }
 
 /* 
