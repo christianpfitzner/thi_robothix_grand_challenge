@@ -31,7 +31,7 @@ class MoveItArmInterface
         geometry_msgs::Pose offset;
         offset.position.x = 0;
         offset.position.y = 0;
-        offset.position.z = z_offset_m;
+        offset.position.z = -z_offset_m;
         offset.orientation.x = q.x();
         offset.orientation.y = q.y();
         offset.orientation.z = q.z();
@@ -48,7 +48,7 @@ class MoveItArmInterface
         geometry_msgs::Pose offset;
         offset.position.x = 0;
         offset.position.y = 0;
-        offset.position.z = z_offset_m;
+        offset.position.z = -z_offset_m;
         offset.orientation.x = q.x();
         offset.orientation.y = q.y();
         offset.orientation.z = q.z();
@@ -93,7 +93,7 @@ class MoveItArmInterface
         unpredictable motions of redundant joints and could be a safety issue!!!*/
 
         moveit_msgs::RobotTrajectory trajectory;
-        const double jump_threshold = 0.0;
+        const double jump_threshold = 0.5;
         const double eef_step = 0.01;
         mgi_->setPoseReferenceFrame(target_pose_stamped.header.frame_id);
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
