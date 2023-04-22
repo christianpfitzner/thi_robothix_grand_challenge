@@ -12,11 +12,13 @@
 #include <moveit/robot_state/robot_state.h>
 #include <stdexcept>
 #include <tf2/LinearMath/Quaternion.h>
+#include <moveit_visual_tools/moveit_visual_tools.h>
+#include "rviz_visual_tools/rviz_visual_tools.h"
 
 class MoveItArmInterface
 {
   public:
-    MoveItArmInterface(std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi, const double planning_time, const double max_vel_scale_factor, const double max_acc_scale_factor) : mgi_(mgi)
+    MoveItArmInterface(std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi, const double planning_time, const double max_vel_scale_factor, const double max_acc_scale_factor, std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools) : mgi_(mgi), visual_tools_(visual_tools)
     {
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
@@ -89,9 +91,17 @@ class MoveItArmInterface
         const double eef_step = 0.01;
         mgi_->setPoseReferenceFrame(frame_id);
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, false);
+        ROS_WARN_STREAM("Planning Frame: " << mgi_->getPlanningFrame());
 
         if (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
+        {
+            visual_tools_->publishAxisLabeled(offset, "pose1");
+            // publish trajectory starting at frame panda_hand_tcp
+            visual_tools_->publishPath(waypoints,rviz_visual_tools::LIME_GREEN, rviz_visual_tools::SMALL);
+            // visual_tools_->trigger();
+            visual_tools_->prompt("execute trajectory");
             mgi_->execute(trajectory);
+        }
         else
         {
             ROS_ERROR("MoveItArmInterface::moveToFramePTP: Failed to plan to target pose");
@@ -117,6 +127,7 @@ class MoveItArmInterface
     }
 
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
+    std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools_;
     moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm_;
 };
 
