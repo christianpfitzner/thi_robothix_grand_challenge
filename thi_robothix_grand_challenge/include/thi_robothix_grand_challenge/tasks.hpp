@@ -9,14 +9,14 @@ class Task_A : public TaskClass
 {
   public:
     Task_A() : TaskClass("Task_A: Press Blue Button") {};
-    void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface);
+    void run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface);
 };
 
 class Task_B : public TaskClass
 {
   public:
     Task_B() : TaskClass("Task_B: Adjust Slider") {};
-    void run(std::unique_ptr<MoveItArmInterface> arm_interface, std::unique_ptr<MoveItGripperInterface> gripper_interface);
+    void run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface);
 };
 
 class Task_C : public TaskClass
