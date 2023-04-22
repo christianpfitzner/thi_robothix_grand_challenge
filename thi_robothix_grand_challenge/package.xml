@@ -75,6 +75,7 @@
   <depend>cv_bridge</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
 
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>moveit_core</exec_depend>

@@ -46,6 +46,7 @@ catkin_package(
     cv_bridge
     std_msgs
     sensor_msgs
+    geometry_msgs
   DEPENDS
     EIGEN3
 )
@@ -54,6 +55,9 @@ include_directories(include SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} $
 
 add_executable(thi_robothix_grand_challenge_node        src/thi_robothix_grand_challenge_node.cpp)
 target_link_libraries(thi_robothix_grand_challenge_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(tcp_tf_broadcaster src/tf_tcp_probe_broadcaster.cpp)
+target_link_libraries(tcp_tf_broadcaster ${catkin_LIBRARIES})
 
 catkin_install_python(PROGRAMS
     scripts/target_second_arrow_V2.py
