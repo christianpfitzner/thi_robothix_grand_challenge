@@ -9,6 +9,20 @@
 #include "std_srvs/Trigger.h"
 #include <stdexcept>
 #include <thread>
+#include <tf/tf.h>
+
+tf::Transform tf_tcp_probe;
+geometry_msgs::TransformStamped transformStamped;
+tf2_ros::Buffer tfBuffer;
+
+tf::Vector3 vector_calculation( geometry_msgs::TransformStamped& transformStamped)
+{
+    return tf::Vector3(transformStamped.transform.translation.x,
+                       transformStamped.transform.translation.y,    
+                       transformStamped.transform.translation.z);
+
+}
+
 
 inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_order)
 {
@@ -109,7 +123,8 @@ void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
 
 void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
-    
+    //transformStamped = tfBuffer.lookupTransform("panda_EE", frame_id, ros::Time(0));
+    //tf_tcp_probe.setOrigin(vector_calculation(transformStamped));
 }
 
 void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
