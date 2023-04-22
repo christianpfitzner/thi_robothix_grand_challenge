@@ -11,6 +11,7 @@
 #include "ros/ros.h"
 #include <moveit/robot_state/robot_state.h>
 #include <stdexcept>
+#include <tf2/LinearMath/Quaternion.h>
 
 class MoveItArmInterface
 {
@@ -35,6 +36,19 @@ class MoveItArmInterface
         moveToFrameLinear(frame_id, offset);
     }
 
+    void approachFrameLinear(std::string frame_id, double z_offset_m, double z_orientation)
+    {
+        tf2::Quaternion q;
+        q.setRPY(0,0,z_orientation);
+
+        auto offset = geometry_msgs::Pose();
+        offset.position.x = 0;
+        offset.position.y = 0;
+        offset.position.z = -z_offset_m;
+        offset.orientation = q;
+        moveToFrameLinear(frame_id, offset);
+    }
+
     void approachFramePTP(std::string frame_id, double z_offset_m)
     {
         auto offset = geometry_msgs::Pose();
@@ -45,6 +59,19 @@ class MoveItArmInterface
         offset.orientation.y = 0;
         offset.orientation.z = 0;
         offset.orientation.w = 1;
+        moveToFramePTP(frame_id, offset);
+    }
+
+    void approachFramePTP(std::string frame_id, double z_offset_m, double z_orientation)
+    {
+        tf2::Quaternion q;
+        q.setRPY(0,0,z_orientation);
+
+        auto offset = geometry_msgs::Pose();
+        offset.position.x = 0;
+        offset.position.y = 0;
+        offset.position.z = -z_offset_m;
+        offset.orientation = q;
         moveToFramePTP(frame_id, offset);
     }
 
