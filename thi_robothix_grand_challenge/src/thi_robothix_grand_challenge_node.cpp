@@ -15,14 +15,6 @@ tf::Transform tf_tcp_probe;
 geometry_msgs::TransformStamped transformStamped;
 tf2_ros::Buffer tfBuffer;
 
-tf::Vector3 vector_calculation( geometry_msgs::TransformStamped& transformStamped)
-{
-    return tf::Vector3(transformStamped.transform.translation.x,
-                       transformStamped.transform.translation.y,    
-                       transformStamped.transform.translation.z);
-
-}
-
 enum class TCP_Positions {GRIPPER_BOTTOM,GRIPPER_CENTER,PROBE};
 
 inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_order)
