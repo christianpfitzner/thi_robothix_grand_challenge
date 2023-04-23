@@ -18,6 +18,8 @@
 #include <string>
 #include <stdexcept>
 
+#define DEBUG_VISUALIZATION false
+
 class MoveItArmInterface
 {
   public:
@@ -85,6 +87,8 @@ class MoveItArmInterface
         // Add Target Pose to waypoints
         waypoints.push_back(offset);
 
+
+        #if DEBUG_VISUALIZATION
         tf2_ros::Buffer tfBuffer;
         tf2_ros::TransformListener tfListener(tfBuffer);
         ros::Duration(1.0).sleep();
@@ -92,7 +96,7 @@ class MoveItArmInterface
         geometry_msgs::PoseStamped offset_stamped;
         offset_stamped.header.frame_id = frame_id;
         offset_stamped.pose = offset;
-
+        #endif
         // We want the Cartesian path to be interpolated at a resolution of 1 cm which is
         // why we will specify 0.01 as the max step in Cartesian translation.
 
@@ -106,11 +110,13 @@ class MoveItArmInterface
 
         if (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
         {
+            #if DEBUG_VISUALIZATION
             visual_tools_->publishAxisLabeled(tfBuffer.transform(offset_stamped, "panda_link0").pose, "target_point");
             // publish trajectory starting at frame panda_hand_tcp
             visual_tools_->publishPath(waypoints,rviz_visual_tools::LIME_GREEN, rviz_visual_tools::SMALL);
             visual_tools_->trigger();
             visual_tools_->prompt("execute trajectory");
+            #endif
             mgi_->execute(trajectory);
         }
         else
