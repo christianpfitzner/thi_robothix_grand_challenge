@@ -212,9 +212,28 @@
 <joint name="box_socket_grey_joint" type="fixed">
   <parent link="box_corner_4"/>
   <child link="box_socket_grey"/>
-  <origin rpy="0 -${pi/2} 0" xyz=" -0.0482 0.0265 0.0963"/>
+  <origin rpy="${pi} -${pi/2} 0" xyz=" -0.0482 0.0265 0.0963"/>
 </joint>
 <link name="box_socket_grey">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 -0.001"/>
+    <geometry>
+      <cylinder radius="0.007" length="0.002"/>
+    </geometry>
+    <material name="grey">
+      <color rgba="0.5 0.5 0.5 1"/>
+    </material>
+  </visual>
+</link>
+
+<!-- Probe gripping Point-->
+
+<joint name="box_probe_gripping_point_joint" type="fixed">
+  <parent link="box_corner_4"/>
+  <child link="box_probe_gripping_point"/>
+  <origin rpy="${pi} -${pi/2} 0" xyz=" -0.1488 0.0265 0.0963"/>
+</joint>
+<link name="box_probe_gripping_point">
   <visual>
     <origin rpy="0 0 0" xyz="0 0 -0.001"/>
     <geometry>
