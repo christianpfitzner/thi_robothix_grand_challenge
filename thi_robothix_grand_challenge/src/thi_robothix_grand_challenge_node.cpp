@@ -142,8 +142,17 @@ void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
 
 void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
-    //transformStamped = tfBuffer.lookupTransform("panda_EE", frame_id, ros::Time(0));
-    //tf_tcp_probe.setOrigin(vector_calculation(transformStamped));
+    //grip the probe and change tcp
+    gripper_interface.setGripperWidth(0.05);
+    arm_interface.moveToFramePTP("box_probe_gripping_point", 0.05);
+    arm_interface.moveToFrameLinear("box_probe_gripping_point");
+    gripper_interface.closeGripper();
+    //tf tcp to probe
+
+    arm_interface.moveToFrameLinear("box_socket_grey", 0.02);
+
+    //open lid
+    arm_interface.moveToFrameLinear("box_lid_opening_pos_1", 0.05);
 }
 
 void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
