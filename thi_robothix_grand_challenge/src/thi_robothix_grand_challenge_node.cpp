@@ -23,6 +23,7 @@ tf::Vector3 vector_calculation( geometry_msgs::TransformStamped& transformStampe
 
 }
 
+enum class TCP_Positions {GRIPPER_BOTTOM,GRIPPER_CENTER,PROBE};
 
 inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_order)
 {
@@ -104,7 +105,29 @@ inline void detect_box(MoveItArmInterface& arm_interface, MoveItGripperInterface
     trigger_box_detection_thread.join();
 }
 
-void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
+inline void change_tcp_frame(std::shared_ptr<ros::NodeHandle> nh, TCP_Positions position)
+{
+    std::string pos_str;
+    switch(position)
+    {
+        case TCP_Positions::GRIPPER_BOTTOM: pos_str = "gripper_bottom"; break;
+        case TCP_Positions::GRIPPER_CENTER: pos_str = "gripper_center"; break;
+        case TCP_Positions::PROBE: pos_str = "probe"; break; 
+    }
+    ros::ServiceClient client = nh->serviceClient<std_srvs::Trigger>("/tcp_position_publisher/" + pos_str);
+    std_srvs::Trigger srv;
+    if (client.call(srv))
+    {
+        ROS_INFO("TCP position changed");
+    }
+    else
+    {
+        ROS_ERROR("Failed to call service tcp_position_publisher");
+        throw std::runtime_error("Failed to call service tcp_position_publisher");
+    }
+}
+
+void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     gripper_interface.closeGripper();
     arm_interface.moveToFramePTP("box_button_blue",0.1);
@@ -113,7 +136,7 @@ void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
     gripper_interface.openGripper();
 }
 
-void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
+void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     arm_interface.moveToFramePTP("box_slider_start",0.1,M_PI/2);
     gripper_interface.setGripperWidth(0.008);
@@ -126,7 +149,7 @@ void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
     gripper_interface.openGripper();   
 }
 
-void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
+void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     arm_interface.moveToFramePTP("box_socket_black", 0.1);
     gripper_interface.setGripperWidth(0.04);
@@ -142,18 +165,18 @@ void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
     gripper_interface.openGripper();
 }
 
-void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
+void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     //transformStamped = tfBuffer.lookupTransform("panda_EE", frame_id, ros::Time(0));
     //tf_tcp_probe.setOrigin(vector_calculation(transformStamped));
 }
 
-void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
+void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     
 }
 
-void Task_F::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
+void Task_F::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     gripper_interface.closeGripper();
     arm_interface.moveToFramePTP("box_button_red",0.1);
@@ -219,7 +242,7 @@ int main(int argc, char **argv)
     for(auto &&task : tasks)
     {
         ROS_INFO_STREAM("Trying to run task " << task->_task_name);
-        task->run(arm_interface, gripper_interface);
+        task->run(arm_interface, gripper_interface, std::make_shared<ros::NodeHandle>(nh));
     }
 
 /* 
