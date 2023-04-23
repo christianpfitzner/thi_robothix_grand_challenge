@@ -1,19 +1,22 @@
 #ifndef MOVEIT_INTERFACE_HPP_
 #define MOVEIT_INTERFACE_HPP_
 
-#include <moveit/move_group_interface/move_group_interface.h>
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
-#include <moveit_visual_tools/moveit_visual_tools.h>
-#include <tf2_ros/transform_listener.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <string>
-#include <memory>
 #include "ros/ros.h"
-#include <moveit/robot_state/robot_state.h>
-#include <stdexcept>
-#include <tf2/LinearMath/Quaternion.h>
-#include <moveit_visual_tools/moveit_visual_tools.h>
+#include "moveit/move_group_interface/move_group_interface.h"
+#include "moveit/planning_scene_interface/planning_scene_interface.h"
+#include "moveit_visual_tools/moveit_visual_tools.h"
+#include "moveit/robot_state/robot_state.h"
+#include "moveit_visual_tools/moveit_visual_tools.h"
 #include "rviz_visual_tools/rviz_visual_tools.h"
+#include "tf2_ros/transform_listener.h"
+#include "tf2_ros/buffer.h"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "geometry_msgs/PoseStamped.h"
+#include <math.h>
+#include <memory>
+#include <string>
+#include <stdexcept>
 
 class MoveItArmInterface
 {
@@ -40,7 +43,6 @@ class MoveItArmInterface
         offset.orientation.w = q.w();
         moveToFrameLinear(frame_id, offset);
     }
-    
 
     void moveToFramePTP(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0)
     {
@@ -83,29 +85,38 @@ class MoveItArmInterface
         // Add Target Pose to waypoints
         waypoints.push_back(offset);
 
+        tf2_ros::Buffer tfBuffer;
+        tf2_ros::TransformListener tfListener(tfBuffer);
+        ros::Duration(1.0).sleep();
+
+        geometry_msgs::PoseStamped offset_stamped;
+        offset_stamped.header.frame_id = frame_id;
+        offset_stamped.pose = offset;
+
         // We want the Cartesian path to be interpolated at a resolution of 1 cm which is
         // why we will specify 0.01 as the max step in Cartesian translation.
 
         moveit_msgs::RobotTrajectory trajectory;
-        const double jump_threshold = 0.5;
+        const double jump_threshold = 0.0;
         const double eef_step = 0.01;
         mgi_->setPoseReferenceFrame(frame_id);
+        mgi_->setEndEffectorLink("panda_hand_tcp");
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, false);
         ROS_WARN_STREAM("Planning Frame: " << mgi_->getPlanningFrame());
 
         if (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
         {
-            visual_tools_->publishAxisLabeled(offset, "pose1");
+            visual_tools_->publishAxisLabeled(tfBuffer.transform(offset_stamped, "panda_link0").pose, "target_point");
             // publish trajectory starting at frame panda_hand_tcp
             visual_tools_->publishPath(waypoints,rviz_visual_tools::LIME_GREEN, rviz_visual_tools::SMALL);
-            // visual_tools_->trigger();
+            visual_tools_->trigger();
             visual_tools_->prompt("execute trajectory");
             mgi_->execute(trajectory);
         }
         else
         {
-            ROS_ERROR("MoveItArmInterface::moveToFramePTP: Failed to plan to target pose");
-            throw std::runtime_error("MoveItArmInterface::moveToFramePTP: Failed to plan to target pose");
+            ROS_ERROR("MoveItArmInterface::moveToFrameLinear: Failed to plan to target pose");
+            throw std::runtime_error("MoveItArmInterface::moveToFrameLinear: Failed to plan to target pose");
         }
     }
 
