@@ -115,29 +115,31 @@ void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
 
 void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
-    arm_interface.moveToFramePTP("box_slider_start",0.1);
+    arm_interface.moveToFramePTP("box_slider_start",0.1,M_PI/2);
     gripper_interface.setGripperWidth(0.008);
     arm_interface.changeMaxVelocityScalingFactor(0.05);
-    arm_interface.moveToFrameLinear("box_slider_start");
-    arm_interface.moveToFrameLinear("box_slider_stop");
-    arm_interface.moveToFrameLinear("box_slider_start");
+    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2);
+    arm_interface.moveToFrameLinear("box_slider_stop",0.005,M_PI/2);
+    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2);
     arm_interface.changeMaxVelocityScalingFactor(1.0);
-    arm_interface.moveToFrameLinear("box_slider_start",0.1); 
+    arm_interface.moveToFrameLinear("box_slider_start",0.1,M_PI/2); 
     gripper_interface.openGripper();   
 }
 
 void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
 {
     arm_interface.moveToFramePTP("box_socket_black", 0.1);
-    arm_interface.moveToFrameLinear("box_socket_black");
+    gripper_interface.setGripperWidth(0.04);
+    arm_interface.moveToFrameLinear("box_socket_black",0.005);
     arm_interface.changeMaxVelocityScalingFactor(0.1);
     gripper_interface.closeGripper();
     arm_interface.moveToFrameLinear("box_socket_black", 0.05);
     arm_interface.moveToFramePTP("box_socket_red", 0.05);
-    arm_interface.moveToFrameLinear("box_socket_red");
-    gripper_interface.openGripper();
+    arm_interface.moveToFrameLinear("box_socket_red",0.005);
+    gripper_interface.setGripperWidth(0.02);
     arm_interface.changeMaxVelocityScalingFactor(1);
     arm_interface.moveToFrameLinear("box_socket_red", 0.1);
+    gripper_interface.openGripper();
 }
 
 void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface)
