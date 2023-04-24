@@ -12,6 +12,10 @@
 
     <!-- start thi_robothix_grand_challenge_node with 10s delay -->
     <param name="task_order" value="$(arg task_order)"/>
-    <node name="thi_robothix_main" pkg="thi_robothix_grand_challenge_2023" type="thi_robothix_grand_challenge_node" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@' "/>
-
+    
+     <node name="thi_robothix_main" pkg="thi_robothix_grand_challenge_2023" type="thi_robothix_grand_challenge_node" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@' "/>
+ <!--  -->
+    
+  <!--   <node name="thi_robothix_main" pkg="thi_robothix_grand_challenge_2023" type="dyi_node"/>
+   -->
 </launch>
