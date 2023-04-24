@@ -175,7 +175,9 @@ int main(int argc, char **argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 1, 1, std::make_shared<moveit_visual_tools::MoveItVisualTools>("panda_link0"));
+    std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools = std::make_shared<moveit_visual_tools::MoveItVisualTools>("panda_link0");
+
+    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 1, 1, visual_tools);
     MoveItGripperInterface gripper_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 0.5, 0.3, 0.1);
 
 /* 
@@ -188,16 +190,15 @@ int main(int argc, char **argv)
         ROS_ERROR("Could not get task order from parameter server. Using default task order.");
 
     std::vector<std::unique_ptr<TaskClass>> tasks = create_tasks(task_order);
-    ROS_INFO_STREAM("Created " << tasks.size() << " tasks.");
 
 /* 
   ┌─────────────────────────────────────────────────────────────────────────────┐
   │ wait until ready                                                            │
   └─────────────────────────────────────────────────────────────────────────────┘
 */
-    //! TODO
-
-
+    // ROS_WARN("Waiting for user to press enter to start.");
+    // visual_tools->prompt("Press 'continue' in the RvizVisualToolsGui window to start execution.");
+    
 /* 
   ┌─────────────────────────────────────────────────────────────────────────────┐
   │ Detect Box & Get to Start Position                                          │
@@ -222,7 +223,7 @@ int main(int argc, char **argv)
 */
     for(auto &&task : tasks)
     {
-        ROS_INFO_STREAM("Trying to run task " << task->_task_name);
+        ROS_WARN_STREAM("Trying to run task " << task->_task_name);
         task->run(arm_interface, gripper_interface, std::make_shared<ros::NodeHandle>(nh));
     }
 
@@ -232,7 +233,7 @@ int main(int argc, char **argv)
   └─────────────────────────────────────────────────────────────────────────────┘
  */
     arm_interface.moveToHome();
-    ROS_INFO("Finished all tasks.");
+    ROS_WARN("Finished all tasks.");
 
     return 0;
 }

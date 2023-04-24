@@ -19,7 +19,7 @@
 #include <stdexcept>
 #include "geometry_msgs/TransformStamped.h"
 
-#define DEBUG_VISUALIZATION true
+#define DEBUG_VISUALIZATION false
 
 enum class EE_LINKS {PANDA_HAND_TCP, PANDA_HAND_BOTTOM, PANDA_PROBE};
 
