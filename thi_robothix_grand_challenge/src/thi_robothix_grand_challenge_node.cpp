@@ -11,12 +11,6 @@
 #include <thread>
 #include <tf/tf.h>
 
-tf::Transform tf_tcp_probe;
-geometry_msgs::TransformStamped transformStamped;
-tf2_ros::Buffer tfBuffer;
-
-enum class TCP_Positions {GRIPPER_BOTTOM,GRIPPER_CENTER,PROBE};
-
 inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_order)
 {
     std::vector<std::unique_ptr<TaskClass>> tasks;
@@ -95,28 +89,6 @@ inline void detect_box(MoveItArmInterface& arm_interface, MoveItGripperInterface
 
     // wait for box detection
     trigger_box_detection_thread.join();
-}
-
-inline void change_tcp_frame(std::shared_ptr<ros::NodeHandle> nh, TCP_Positions position)
-{
-    std::string pos_str;
-    switch(position)
-    {
-        case TCP_Positions::GRIPPER_BOTTOM: pos_str = "gripper_bottom"; break;
-        case TCP_Positions::GRIPPER_CENTER: pos_str = "gripper_center"; break;
-        case TCP_Positions::PROBE: pos_str = "probe"; break; 
-    }
-    ros::ServiceClient client = nh->serviceClient<std_srvs::Trigger>("/tcp_position_publisher/" + pos_str);
-    std_srvs::Trigger srv;
-    if (client.call(srv))
-    {
-        ROS_INFO("TCP position changed");
-    }
-    else
-    {
-        ROS_ERROR("Failed to call service tcp_position_publisher");
-        throw std::runtime_error("Failed to call service tcp_position_publisher");
-    }
 }
 
 void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
