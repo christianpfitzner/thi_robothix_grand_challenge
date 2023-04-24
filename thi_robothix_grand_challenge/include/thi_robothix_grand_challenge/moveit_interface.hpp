@@ -30,6 +30,16 @@ class MoveItArmInterface
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
     };
 
+    
+    void do_trajectory(std::vector<geometry_msgs::Pose> waypoints)
+    {
+        ROS_WARN("do trajectory0");;
+        moveit_msgs::RobotTrajectory trajectory;
+        const double jump_threshold = 0.0;
+        const double eef_step = 0.01;
+        double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+    }
+
     void moveToFrameLinear(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0)
     {
         tf2::Quaternion q;
@@ -142,6 +152,7 @@ class MoveItArmInterface
             throw std::runtime_error("MoveItArmInterface::moveToFramePTP: Failed to plan to target pose");
         }
     }
+
 
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
     std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools_;
