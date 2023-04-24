@@ -11,12 +11,6 @@
 #include <thread>
 #include <tf/tf.h>
 
-tf::Transform tf_tcp_probe;
-geometry_msgs::TransformStamped transformStamped;
-tf2_ros::Buffer tfBuffer;
-
-enum class TCP_Positions {GRIPPER_BOTTOM,GRIPPER_CENTER,PROBE};
-
 inline std::vector<std::unique_ptr<TaskClass>> create_tasks(std::string task_order)
 {
     std::vector<std::unique_ptr<TaskClass>> tasks;
@@ -97,63 +91,41 @@ inline void detect_box(MoveItArmInterface& arm_interface, MoveItGripperInterface
     trigger_box_detection_thread.join();
 }
 
-inline void change_tcp_frame(std::shared_ptr<ros::NodeHandle> nh, TCP_Positions position)
-{
-    std::string pos_str;
-    switch(position)
-    {
-        case TCP_Positions::GRIPPER_BOTTOM: pos_str = "gripper_bottom"; break;
-        case TCP_Positions::GRIPPER_CENTER: pos_str = "gripper_center"; break;
-        case TCP_Positions::PROBE: pos_str = "probe"; break; 
-    }
-    ros::ServiceClient client = nh->serviceClient<std_srvs::Trigger>("/tcp_position_publisher/" + pos_str);
-    std_srvs::Trigger srv;
-    if (client.call(srv))
-    {
-        ROS_INFO("TCP position changed");
-    }
-    else
-    {
-        ROS_ERROR("Failed to call service tcp_position_publisher");
-        throw std::runtime_error("Failed to call service tcp_position_publisher");
-    }
-}
-
 void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     gripper_interface.closeGripper();
-    arm_interface.moveToFramePTP("box_button_blue",0.1);
-    arm_interface.moveToFrameLinear("box_button_blue");
-    arm_interface.moveToFrameLinear("box_button_blue",0.1);
+    arm_interface.moveToFramePTP("box_button_blue",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_blue",0,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_blue",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.openGripper();
 }
 
 void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
-    arm_interface.moveToFramePTP("box_slider_start",0.1,M_PI/2);
+    arm_interface.moveToFramePTP("box_slider_start",0.1,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.setGripperWidth(0.008);
     arm_interface.changeMaxVelocityScalingFactor(0.05);
-    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2);
-    arm_interface.moveToFrameLinear("box_slider_stop",0.005,M_PI/2);
-    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2);
+    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_slider_stop",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
     arm_interface.changeMaxVelocityScalingFactor(1.0);
-    arm_interface.moveToFrameLinear("box_slider_start",0.1,M_PI/2); 
+    arm_interface.moveToFrameLinear("box_slider_start",0.1,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM); 
     gripper_interface.openGripper();   
 }
 
 void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
-    arm_interface.moveToFramePTP("box_socket_black", 0.1);
+    arm_interface.moveToFramePTP("box_socket_black", 0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.setGripperWidth(0.04);
-    arm_interface.moveToFrameLinear("box_socket_black",0.005);
+    arm_interface.moveToFrameLinear("box_socket_black",0.005,0,EE_LINKS::PANDA_HAND_BOTTOM);
     arm_interface.changeMaxVelocityScalingFactor(0.1);
     gripper_interface.closeGripper();
-    arm_interface.moveToFrameLinear("box_socket_black", 0.05);
-    arm_interface.moveToFramePTP("box_socket_red", 0.05);
-    arm_interface.moveToFrameLinear("box_socket_red",0.005);
+    arm_interface.moveToFrameLinear("box_socket_black", 0.05,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_socket_red", 0.05,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_socket_red",0.005,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.setGripperWidth(0.02);
     arm_interface.changeMaxVelocityScalingFactor(1);
-    arm_interface.moveToFrameLinear("box_socket_red", 0.1);
+    arm_interface.moveToFrameLinear("box_socket_red", 0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.openGripper();
 }
 
@@ -188,9 +160,9 @@ void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
 void Task_F::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     gripper_interface.closeGripper();
-    arm_interface.moveToFramePTP("box_button_red",0.1);
-    arm_interface.moveToFrameLinear("box_button_red");
-    arm_interface.moveToFrameLinear("box_button_red",0.1);
+    arm_interface.moveToFramePTP("box_button_red",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_red",0,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_red",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.openGripper();
 }
 
@@ -203,7 +175,9 @@ int main(int argc, char **argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 1, 1, std::make_shared<moveit_visual_tools::MoveItVisualTools>("panda_link0"));
+    std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools = std::make_shared<moveit_visual_tools::MoveItVisualTools>("panda_link0");
+
+    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 1, 1, visual_tools);
     MoveItGripperInterface gripper_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 0.5, 0.3, 0.1);
 
 /* 
@@ -216,16 +190,15 @@ int main(int argc, char **argv)
         ROS_ERROR("Could not get task order from parameter server. Using default task order.");
 
     std::vector<std::unique_ptr<TaskClass>> tasks = create_tasks(task_order);
-    ROS_INFO_STREAM("Created " << tasks.size() << " tasks.");
 
 /* 
   ┌─────────────────────────────────────────────────────────────────────────────┐
   │ wait until ready                                                            │
   └─────────────────────────────────────────────────────────────────────────────┘
 */
-    //! TODO
-
-
+    // ROS_WARN("Waiting for user to press enter to start.");
+    // visual_tools->prompt("Press 'continue' in the RvizVisualToolsGui window to start execution.");
+    
 /* 
   ┌─────────────────────────────────────────────────────────────────────────────┐
   │ Detect Box & Get to Start Position                                          │
@@ -250,7 +223,7 @@ int main(int argc, char **argv)
 */
     for(auto &&task : tasks)
     {
-        ROS_INFO_STREAM("Trying to run task " << task->_task_name);
+        ROS_WARN_STREAM("Trying to run task " << task->_task_name);
         task->run(arm_interface, gripper_interface, std::make_shared<ros::NodeHandle>(nh));
     }
 
@@ -260,7 +233,7 @@ int main(int argc, char **argv)
   └─────────────────────────────────────────────────────────────────────────────┘
  */
     arm_interface.moveToHome();
-    ROS_INFO("Finished all tasks.");
+    ROS_WARN("Finished all tasks.");
 
     return 0;
 }

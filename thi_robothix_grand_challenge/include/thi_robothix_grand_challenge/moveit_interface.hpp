@@ -17,17 +17,23 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
+#include "geometry_msgs/TransformStamped.h"
 
 #define DEBUG_VISUALIZATION false
+
+enum class EE_LINKS {PANDA_HAND_TCP, PANDA_HAND_BOTTOM, PANDA_PROBE};
+
 
 class MoveItArmInterface
 {
   public:
-    MoveItArmInterface(std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi, const double planning_time, const double max_vel_scale_factor, const double max_acc_scale_factor, std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools) : mgi_(mgi), visual_tools_(visual_tools)
+    MoveItArmInterface(std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi, const double planning_time, const double max_vel_scale_factor, const double max_acc_scale_factor, std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools) : mgi_(mgi), visual_tools_(visual_tools), tfListener_(tfBuffer_)
     {
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
+
+        ros::Duration(1.0).sleep();
     };
 
     
@@ -40,42 +46,87 @@ class MoveItArmInterface
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
     }
 
-    void moveToFrameLinear(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0)
+    void moveToFrameLinear(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0, EE_LINKS ee_link=EE_LINKS::PANDA_HAND_TCP)
     {
+        geometry_msgs::PoseStamped offset;
+
         tf2::Quaternion q;
         q.setRPY(0,0,z_orientation_rad);
 
-        geometry_msgs::Pose offset;
-        offset.position.x = 0;
-        offset.position.y = 0;
-        offset.position.z = -z_offset_m;
-        offset.orientation.x = q.x();
-        offset.orientation.y = q.y();
-        offset.orientation.z = q.z();
-        offset.orientation.w = q.w();
-        moveToFrameLinear(frame_id, offset);
+        offset.pose.position.x = 0;
+        offset.pose.position.y = 0;
+        offset.pose.position.z = -z_offset_m;
+        offset.pose.orientation.x = q.x();
+        offset.pose.orientation.y = q.y();
+        offset.pose.orientation.z = q.z();
+        offset.pose.orientation.w = q.w();
+
+        switch (ee_link)
+        {
+        case EE_LINKS::PANDA_HAND_TCP:
+            offset.header.frame_id = "panda_hand_tcp";
+            break;
+        case EE_LINKS::PANDA_HAND_BOTTOM:
+            offset.header.frame_id = "panda_hand_tcp";
+            offset = tfBuffer_.transform(offset, "panda_hand_bottom");
+
+            break;
+        case EE_LINKS::PANDA_PROBE:
+            offset.header.frame_id = "panda_hand_tcp";
+            offset = tfBuffer_.transform(offset, "panda_probe");
+            break;
+        
+        default:
+            throw std::invalid_argument("Invalid EE_LINKS");
+            break;
+        }
+
+        moveToFrameLinear(frame_id, offset.pose);
     }
 
-    void moveToFramePTP(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0)
+    void moveToFramePTP(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0, EE_LINKS ee_link=EE_LINKS::PANDA_HAND_TCP)
     {
+        
+        geometry_msgs::PoseStamped offset;
+
         tf2::Quaternion q;
         q.setRPY(0,0,z_orientation_rad);
 
-        geometry_msgs::Pose offset;
-        offset.position.x = 0;
-        offset.position.y = 0;
-        offset.position.z = -z_offset_m;
-        offset.orientation.x = q.x();
-        offset.orientation.y = q.y();
-        offset.orientation.z = q.z();
-        offset.orientation.w = q.w();
-        moveToFramePTP(frame_id, offset);
+        offset.pose.position.x = 0;
+        offset.pose.position.y = 0;
+        offset.pose.position.z = -z_offset_m;
+        offset.pose.orientation.x = q.x();
+        offset.pose.orientation.y = q.y();
+        offset.pose.orientation.z = q.z();
+        offset.pose.orientation.w = q.w();
+
+        switch (ee_link)
+        {
+        case EE_LINKS::PANDA_HAND_TCP:
+            offset.header.frame_id = "panda_hand_tcp";
+            break;
+        case EE_LINKS::PANDA_HAND_BOTTOM:
+            offset.header.frame_id = "panda_hand_tcp";
+            offset = tfBuffer_.transform(offset, "panda_hand_bottom");
+
+            break;
+        case EE_LINKS::PANDA_PROBE:
+            offset.header.frame_id = "panda_hand_tcp";
+            offset = tfBuffer_.transform(offset, "panda_probe");
+            break;
+        
+        default:
+            throw std::invalid_argument("Invalid EE_LINKS");
+            break;
+        }
+
+        moveToFramePTP(frame_id, offset.pose);
     }
 
     void moveToHome()
     {
         // Home Position for Franka Emika
-        moveToFramePTP("home");
+        moveToFramePTP("home",0,0,EE_LINKS::PANDA_HAND_TCP);
     }
 
     void changeMaxVelocityScalingFactor(double max_vel_scale_factor)
@@ -153,10 +204,15 @@ class MoveItArmInterface
         }
     }
 
+    geometry_msgs::TransformStamped hand_to_hand_bottom_;
+    geometry_msgs::TransformStamped hand_to_probe_;
 
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
     std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools_;
     moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm_;
+    tf2_ros::Buffer tfBuffer_;
+    tf2_ros::TransformListener tfListener_;
+
 };
 
 class MoveItGripperInterface
