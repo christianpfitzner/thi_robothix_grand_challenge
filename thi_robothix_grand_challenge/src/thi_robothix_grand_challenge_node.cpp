@@ -94,38 +94,38 @@ inline void detect_box(MoveItArmInterface& arm_interface, MoveItGripperInterface
 void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     gripper_interface.closeGripper();
-    arm_interface.moveToFramePTP("box_button_blue",0.1);
-    arm_interface.moveToFrameLinear("box_button_blue");
-    arm_interface.moveToFrameLinear("box_button_blue",0.1);
+    arm_interface.moveToFramePTP("box_button_blue",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_blue",0,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_blue",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.openGripper();
 }
 
 void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
-    arm_interface.moveToFramePTP("box_slider_start",0.1,M_PI/2);
+    arm_interface.moveToFramePTP("box_slider_start",0.1,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.setGripperWidth(0.008);
     arm_interface.changeMaxVelocityScalingFactor(0.05);
-    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2);
-    arm_interface.moveToFrameLinear("box_slider_stop",0.005,M_PI/2);
-    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2);
+    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_slider_stop",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
     arm_interface.changeMaxVelocityScalingFactor(1.0);
-    arm_interface.moveToFrameLinear("box_slider_start",0.1,M_PI/2); 
+    arm_interface.moveToFrameLinear("box_slider_start",0.1,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM); 
     gripper_interface.openGripper();   
 }
 
 void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
-    arm_interface.moveToFramePTP("box_socket_black", 0.1);
+    arm_interface.moveToFramePTP("box_socket_black", 0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.setGripperWidth(0.04);
-    arm_interface.moveToFrameLinear("box_socket_black",0.005);
+    arm_interface.moveToFrameLinear("box_socket_black",0.005,0,EE_LINKS::PANDA_HAND_BOTTOM);
     arm_interface.changeMaxVelocityScalingFactor(0.1);
     gripper_interface.closeGripper();
-    arm_interface.moveToFrameLinear("box_socket_black", 0.05);
-    arm_interface.moveToFramePTP("box_socket_red", 0.05);
-    arm_interface.moveToFrameLinear("box_socket_red",0.005);
+    arm_interface.moveToFrameLinear("box_socket_black", 0.05,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_socket_red", 0.05,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_socket_red",0.005,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.setGripperWidth(0.02);
     arm_interface.changeMaxVelocityScalingFactor(1);
-    arm_interface.moveToFrameLinear("box_socket_red", 0.1);
+    arm_interface.moveToFrameLinear("box_socket_red", 0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.openGripper();
 }
 
@@ -143,9 +143,9 @@ void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
 void Task_F::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     gripper_interface.closeGripper();
-    arm_interface.moveToFramePTP("box_button_red",0.1);
-    arm_interface.moveToFrameLinear("box_button_red");
-    arm_interface.moveToFrameLinear("box_button_red",0.1);
+    arm_interface.moveToFramePTP("box_button_red",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_red",0,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_red",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.openGripper();
 }
 
