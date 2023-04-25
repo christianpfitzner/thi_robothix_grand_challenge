@@ -16,7 +16,7 @@
     <param name="/box_position_point/p1" value="0.3 0.3 0.0"/>
     <param name="/box_position_point/p2" value="0.3 0.3 0.0"/>
     <param name="/box_position_point/p3" value="0.3 0.3 0.0"/>
-    <node name="box_position_publisher" pkg="box_position_publisher" type="box_position_publisher_node" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@' "/>
+    <!-- <node name="box_position_publisher" pkg="box_position_publisher" type="box_position_publisher_node" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@' "/> -->
 
     <!-- start thi_robothix_grand_challenge_node with 10s delay -->
     <param name="task_order" value="$(arg task_order)"/>
