@@ -5,10 +5,14 @@
     <!-- set parameters and custom transforms -->
     <include file="$(find thi_robothix_grand_challenge_2023)/launch/meta.launch"/>
 
+    <param name="/move_group/planning_plugin" value="pilz_industrial_motion_planner::CommandPlanner"/>
+
     <!-- start simulation -->
     <include file="$(find panda_moveit_config)/launch/demo.launch" pass_all_args="true">
         <arg name="rviz_tutorial"        value="true"/>
     </include>
+
+    <include file="$(find moveit_resources_panda_moveit_config)/launch/pilz_industrial_motion_planner_planning_pipeline.launch.xml" />
 
     <!-- start thi_robothix_grand_challenge_node with 10s delay -->
     <param name="task_order" value="$(arg task_order)"/>
