@@ -25,6 +25,8 @@ find_package(catkin REQUIRED
     std_msgs
     sensor_msgs
     cv_bridge
+    pilz_industrial_motion_planner
+    moveit_msgs
 )
 
 find_package(Eigen3 REQUIRED)
@@ -47,6 +49,8 @@ catkin_package(
     std_msgs
     sensor_msgs
     geometry_msgs
+    pilz_industrial_motion_planner
+    moveit_msgs
   DEPENDS
     EIGEN3
 )
