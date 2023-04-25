@@ -57,7 +57,7 @@ add_executable(thi_robothix_grand_challenge_node        src/thi_robothix_grand_c
 target_link_libraries(thi_robothix_grand_challenge_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 
-add_executable(dyi_node        src/dyi_node.cpp)
+add_executable(dyi_node       dyi/dyi_node.cpp)
 target_link_libraries(dyi_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 catkin_install_python(PROGRAMS
