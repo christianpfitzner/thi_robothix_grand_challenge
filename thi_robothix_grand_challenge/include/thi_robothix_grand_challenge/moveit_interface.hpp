@@ -43,6 +43,8 @@ class MoveItArmInterface
         moveit_msgs::RobotTrajectory trajectory;
         const double jump_threshold = 0.0;
         const double eef_step = 0.01;
+        //mgi_->setPoseReferenceFrame(frame_id);
+        mgi_->setEndEffectorLink("panda_hand_tcp");
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
     }
 
