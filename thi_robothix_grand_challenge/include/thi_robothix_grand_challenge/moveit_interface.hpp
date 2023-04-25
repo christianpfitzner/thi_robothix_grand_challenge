@@ -36,6 +36,18 @@ class MoveItArmInterface
         ros::Duration(1.0).sleep();
     };
 
+    
+    void do_trajectory(std::vector<geometry_msgs::Pose> waypoints)
+    {
+        ROS_WARN("do trajectory0");;
+        moveit_msgs::RobotTrajectory trajectory;
+        const double jump_threshold = 0.0;
+        const double eef_step = 0.01;
+        //mgi_->setPoseReferenceFrame(frame_id);
+        mgi_->setEndEffectorLink("panda_hand_tcp");
+        double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+    }
+
     void moveToFrameLinear(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0, EE_LINKS ee_link=EE_LINKS::PANDA_HAND_TCP)
     {
         geometry_msgs::PoseStamped offset;
