@@ -75,6 +75,7 @@ target_link_libraries(speed_test_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 catkin_install_python(PROGRAMS
     scripts/box_aprox_detection.py
+    scripts/read_display.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
