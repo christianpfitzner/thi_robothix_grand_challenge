@@ -169,6 +169,7 @@ public:
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
+
     };
 
     void closeGripper()

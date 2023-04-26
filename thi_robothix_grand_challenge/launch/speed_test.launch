@@ -1,0 +1,7 @@
+<launch>
+    <node pkg="tf" type="static_transform_publisher" name="p1_tf" args="0.387, -0.084, 0.183 3.14 3.14 0 /panda_link0 /p1 100"/>  
+    <node pkg="tf" type="static_transform_publisher" name="p2_tf" args="0.369, 0.391, 0.200  3.14 3.14 0 /panda_link0 /p2 100"/>  
+
+    <node pkg="thi_robothix_grand_challenge_2023" type="speed_test_node" name="speed_test_node" output="screen"/>
+
+</launch>

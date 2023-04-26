@@ -69,6 +69,10 @@ add_executable(detect_box src/detect_box.cpp)
 target_link_libraries(detect_box ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 
+
+add_executable(speed_test_node src/speed_test_node.cpp)
+target_link_libraries(speed_test_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
 catkin_install_python(PROGRAMS
     scripts/box_aprox_detection.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
