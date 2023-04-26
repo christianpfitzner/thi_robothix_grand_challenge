@@ -48,14 +48,14 @@ class MoveItArmInterface
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
     }
 
-    void moveToFrameLinear(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0, EE_LINKS ee_link=EE_LINKS::PANDA_HAND_TCP)
+    void moveToFrameLinear(std::string frame_id, double z_offset_m = 0, double z_orientation_rad = 0, EE_LINKS ee_link=EE_LINKS::PANDA_HAND_TCP, double x_offset_m = 0)
     {
         geometry_msgs::PoseStamped offset;
 
         tf2::Quaternion q;
         q.setRPY(0,0,z_orientation_rad);
 
-        offset.pose.position.x = 0;
+        offset.pose.position.x = x_offset_m;
         offset.pose.position.y = 0;
         offset.pose.position.z = -z_offset_m;
         offset.pose.orientation.x = q.x();
@@ -163,30 +163,16 @@ class MoveItArmInterface
         // We want the Cartesian path to be interpolated at a resolution of 1 cm which is
         // why we will specify 0.01 as the max step in Cartesian translation.
 
+        my_plan_arm_ = moveit::planning_interface::MoveGroupInterface::Plan();
         moveit_msgs::RobotTrajectory trajectory;
         const double jump_threshold = 0.0;
-        const double eef_step = 0.01;
+        const double eef_step = 0.001;
         mgi_->setPoseReferenceFrame(frame_id);
         mgi_->setEndEffectorLink("panda_hand_tcp");
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, false);
         ROS_WARN_STREAM("Planning Frame: " << mgi_->getPlanningFrame());
+        mgi_->execute(trajectory);
 
-        if (mgi_->plan(my_plan_arm_) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
-        {
-            #if DEBUG_VISUALIZATION
-            visual_tools_->publishAxisLabeled(tfBuffer.transform(offset_stamped, "panda_link0").pose, "target_point");
-            // publish trajectory starting at frame panda_hand_tcp
-            visual_tools_->publishPath(waypoints,rviz_visual_tools::LIME_GREEN, rviz_visual_tools::SMALL);
-            visual_tools_->trigger();
-            visual_tools_->prompt("execute trajectory");
-            #endif
-            mgi_->execute(trajectory);
-        }
-        else
-        {
-            ROS_ERROR("MoveItArmInterface::moveToFrameLinear: Failed to plan to target pose");
-            throw std::runtime_error("MoveItArmInterface::moveToFrameLinear: Failed to plan to target pose");
-        }
     }
 
     void moveToFramePTP(std::string frame_id, geometry_msgs::Pose & offset)

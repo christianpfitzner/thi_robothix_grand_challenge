@@ -3,7 +3,7 @@
     <param name="box_description" command="$(find xacro)/xacro --inorder '$(find box_description)/urdf/box.urdf.xacro'" />
 
     <!-- static transform -->
-    <node pkg="tf" type="static_transform_publisher" name="world_to_box" args="0.3 0.15 0 0 0 0 world box_base_link 100" />
+    <!-- <node pkg="tf" type="static_transform_publisher" name="world_to_box" args="0.3 0.15 0 0 0 0 world box_base_link 100" /> -->
     <node pkg="tf" type="static_transform_publisher" name="world_to_link0" args="0.0 0.0 0.01045 0 0.014 -0.009 world panda_link0 100" />
 
     <node pkg = "tf" type="static_transform_publisher" name="link0_to_home" args= "0.414 0.203 0.416 1.000 -0.003 -0.001 -0.009 panda_link0 home 100"/>

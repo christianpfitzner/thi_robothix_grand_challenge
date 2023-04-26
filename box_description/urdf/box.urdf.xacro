@@ -173,6 +173,34 @@
   </visual>
 </link>
 
+<joint name="box_slider_joint_1" type="fixed">
+  <parent link="box_corner_3"/>
+  <child link="box_slider_1"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.03175 -0.0675 ${box_len_z}"/>
+</joint>
+<link name="box_slider_1">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0.005"/>
+    <geometry>
+      <box size="0.007 0.005796 0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_slider_joint_2" type="fixed">
+  <parent link="box_corner_3"/>
+  <child link="box_slider_2"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.05325 -0.0675 ${box_len_z}"/>
+</joint>
+<link name="box_slider_2">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0.005"/>
+    <geometry>
+      <box size="0.007 0.005796 0.01"/>
+    </geometry>
+  </visual>
+</link>
+
 <!-- Sockets -->
 
 <joint name="box_socket_red_joint" type="fixed">
