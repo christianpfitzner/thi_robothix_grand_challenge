@@ -1,6 +1,6 @@
 <launch>
     <!-- load box description -->
-    <param name="box_description" command="$(find xacro)/xacro --inorder '$(find box_description)/urdf/box.urdf.xacro'" />
+    <param name="box_description" command="$(find xacro)/xacro '$(find box_description)/urdf/box.urdf.xacro'" />
 
     <!-- static transform -->
     <node pkg="tf" type="static_transform_publisher" name="world_to_box" args="0.3 0.15 0 0 0 0 world box_base_link 100" />
