@@ -19,6 +19,21 @@
             }
         },
         {
+            "label": "catkin build debug",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug",
+            "icon": {"color": "terminal.ansiYellow","id": "wrench"},
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
             "label": "roslaunch sim.launch",
             "type": "shell",
             "command": "cd ${workspaceFolder} && cd ../.. && source devel/setup.bash && roslaunch ${workspaceFolder}/thi_robothix_grand_challenge/launch/sim.launch task_order:=${input:task_order}",
@@ -31,7 +46,7 @@
             "label": "rosrun main node",
             "type": "shell",
             "command": "cd ${workspaceFolder} && cd ../.. && source devel/setup.bash && rosrun thi_robothix_grand_challenge_2023 thi_robothix_grand_challenge_node",
-            "dependsOn": ["catkin build","roslaunch sim.launch"],
+            "dependsOn": ["catkin build debug","roslaunch sim.launch"],
             "dependsOrder": "sequence",
             "problemMatcher": [],
             "icon": {"color": "terminal.ansiGreen", "id": "run"},

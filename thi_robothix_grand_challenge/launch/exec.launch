@@ -1,0 +1,3 @@
+<launch>
+    <node name="thi_robothix_main" pkg="thi_robothix_grand_challenge_2023" type="thi_robothix_grand_challenge_node"/>
+</launch>

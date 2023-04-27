@@ -5,9 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ROS: Attach",
+            "name": "ROS: Launch",
             "type": "ros",
-            "request": "attach"
+            "request": "launch",
+            "target": "/home/dev/ros_ws/src/thi_robothix_grand_challenge/thi_robothix_grand_challenge/launch/exec.launch",
+            "arguments": [
+                "task_order:=ABCDEF"],
+            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "catkin build debug"
         }
     ]
 }
