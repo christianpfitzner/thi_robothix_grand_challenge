@@ -304,8 +304,8 @@ def image_callback(img_msg):
     cv2.waitKey(50)
 
 
-# Initialize ROS Node named 'box_aprox_detection’
-rospy.init_node('box_aprox_detection')
+# Initialize ROS Node named 'read_display’
+rospy.init_node('read_display')
 
 # Initialize the CvBridge class
 bridge = CvBridge()
