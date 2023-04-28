@@ -25,6 +25,29 @@ bool moveToPose(moveit::planning_interface::MoveGroupInterface* mgi, geometry_ms
   return success; 
 }
 
+bool moveToFrameLIN(moveit::planning_interface::MoveGroupInterface* mgi, std::string frame_id)
+{
+
+    geometry_msgs::PoseStamped target_pose_stp;
+    target_pose_stp.header.frame_id = "panda_link0";
+
+    geometry_msgs::Pose target_pose = target_pose_stp.pose;
+
+    std::vector<geometry_msgs::Pose> waypoints;
+
+    waypoints.push_back(target_pose);
+
+    moveit_msgs::RobotTrajectory trajectory;
+    const double jump_threshold = 0.0;
+    const double eef_step = 0.01;
+    double fraction = mgi->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+
+    bool success = (mgi->plan(my_plan_gripper) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    if(success) mgi->move();
+
+    return success;
+
+}
 
 bool moveToFrame( moveit::planning_interface::MoveGroupInterface* mgi, std::string frame_id)
 {
@@ -249,9 +272,9 @@ int main(int argc, char** argv)
 
       geometry_msgs::PoseStamped target; 
       target.header.frame_id    = "panda_link0";
-      target.pose.position.x    = transformStamped.transform.translation.x + 0.01; 
+      target.pose.position.x    = transformStamped.transform.translation.x; // + 0.01; 
       target.pose.position.y    = transformStamped.transform.translation.y; 
-      target.pose.position.z    = transformStamped.transform.translation.z - 0.04; 
+      target.pose.position.z    = transformStamped.transform.translation.z; // - 0.04; 
 
       tf2::Quaternion q;
       q.setRPY(3.14, 0, 0);
@@ -266,7 +289,7 @@ int main(int argc, char** argv)
 
 
 
-            ros::Duration(1.0).sleep();
+      ros::Duration(1.0).sleep();
       try
       {
         transformStamped = tfBuffer.lookupTransform("panda_link0", "fiducial_0", ros::Time(0));
@@ -281,21 +304,25 @@ int main(int argc, char** argv)
 
       // geometry_msgs::PoseStamped target; 
       target.header.frame_id    = "panda_link0";
-      target.pose.position.x    = transformStamped.transform.translation.x + 0.01; 
-      target.pose.position.y    = transformStamped.transform.translation.y ; 
-      target.pose.position.z    = transformStamped.transform.translation.z - 0.01; 
+      target.pose.position.x    = transformStamped.transform.translation.x; // - 0.02; 
+      target.pose.position.y    = transformStamped.transform.translation.y - 0.005 ; 
+      target.pose.position.z    = transformStamped.transform.translation.z + 0.05; 
 
-      // tf2::Quaternion q;
-      // q.setRPY(3.14, 0, 0);
-      // target.pose.orientation = tf2::toMsg(q);
+      tf2::Quaternion r;
+      r.setW(transformStamped.transform.rotation.w);
+      r.setX(transformStamped.transform.rotation.x);
+      r.setY(transformStamped.transform.rotation.y);
+      r.setZ(transformStamped.transform.rotation.z);
 
-
-
-
+      q.setRPY(3.14, 0, 0);
+      q = q * r;
+      q.normalize();
+      target.pose.orientation = tf2::toMsg(q);
 
       moveToPose(&move_group_interface_arm, target);
-
-
+      
+      target.pose.position.z    = transformStamped.transform.translation.z - 0.01; 
+      moveToPose(&move_group_interface_arm, target);
 
 
 
@@ -304,7 +331,7 @@ int main(int argc, char** argv)
       franka_gripper::GraspGoal grasp_action; 
       grasp_action.width = 0.065*0.5; 
       grasp_action.speed = 1.0; 
-      grasp_action.force = 6; 
+      grasp_action.force = 6;  // N
       grasp_action.epsilon.inner = 0.01;  // Maximum tolerated deviation when the actual grasped width is
       grasp_action.epsilon.outer = 0.01;
 
@@ -316,9 +343,30 @@ int main(int argc, char** argv)
         ROS_ERROR_STREAM("yeah!!!!");
       }
 
+      target.pose.position.z    = transformStamped.transform.translation.z + 0.2; 
+      moveToPose(&move_group_interface_arm, target);
+
+
+      // - Translation: [0.015, -0.597, 0.000]
+      // - Rotation: in Quaternion [0.718, -0.696, 0.001, 0.018]
+      //       in RPY (radian) [3.116, -0.026, -1.540]
+      //       in RPY (degree) [178.558, -1.499, -88.208]
+
+      target.header.frame_id    = "panda_link0";
+      target.pose.position.x    = 0.015; 
+      target.pose.position.y    = -0.597; 
+      target.pose.position.z    = 0; 
+
+      // tf2::Quaternion q;
+      q.setRPY(3.116, -0.026, -1.540);
+      target.pose.orientation = tf2::toMsg(q);
+
+      moveToPose(&move_group_interface_arm, target);
+      openGripper(&move_group_interface_gripper);
+
       // setGripperWidth(&move_group_interface_gripper, 0.064);   
-      moveToPose(&move_group_interface_arm, p1);
-      openGripper(&move_group_interface_gripper); 
+      // moveToPose(&move_group_interface_arm, p1);
+      // openGripper(&move_group_interface_gripper); 
       
       // openGripper(    &move_group_interface_gripper); 
 
