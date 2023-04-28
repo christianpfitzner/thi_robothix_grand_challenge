@@ -28,6 +28,28 @@ import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
 
+# import package for point cloud 
+from sensor_msgs.msg import PointCloud2
+import sensor_msgs.point_cloud2 as pc2
+
+
+
+g_point_cloud = None
+
+# add subscriber for point cloud
+def cloud_callback(data):
+    global g_point_cloud
+    
+    g_point_cloud = data
+
+
+
+
+
+
+
+
+
 def rotate_vector(vector, theta):
     rot     = np.array([[cos(theta), -sin(theta)], 
                         [sin(theta), cos(theta)]])
@@ -246,6 +268,21 @@ def draw_line(img, start, end, color):
     return img
 
 
+
+
+
+# get_3d_coordinate function definition 
+# def pixelTo3DPoint(cloud, u, v):
+#     data_np = ros_numpy.numpify(cloud)
+
+
+
+def cartesian_from_pixel(pixel, focal, dist, c_x, c_y):
+    x = (pixel[0] - c_x) * dist  / focal
+    y = (pixel[1] - c_y) * dist  / focal
+
+    return x,y
+
 def image_callback(img_msg):
     ### Convert ROS Image message to a CV2 Image
     try:
@@ -279,6 +316,35 @@ def image_callback(img_msg):
 
         ### GET P3 --> P3goal
         p_3, p_3goal, v_3 = get_P3_and_P3goal(p_button, vector_x, vector_y)
+
+
+        c_x  = 327.1772766113281
+        c_y  = 243.1417541503906
+        f    = 578.52294921875
+        dist = 0.4
+
+        # get the 3d coordinate of p1 based on the g_point_cloud
+        q_1     = cartesian_from_pixel(p_1,     f, dist, c_x, c_y)
+        q_1goal = cartesian_from_pixel(p_1goal, f, dist, c_x, c_y)
+        q_2     = cartesian_from_pixel(p_2,     f, dist, c_x, c_y)
+        q_2goal = cartesian_from_pixel(p_2goal, f, dist, c_x, c_y)
+        q_3     = cartesian_from_pixel(p_3,     f, dist, c_x, c_y)
+        q_3goal = cartesian_from_pixel(p_3goal, f, dist, c_x, c_y)
+
+
+        q_button = cartesian_from_pixel(p_button, f, dist, c_x, c_y)
+
+        print("q_button: ", q_button)
+
+        print("q_1: ", q_1)
+        print("q_1goal: ", q_1goal)
+        print("q_2: ", q_2)
+        print("q_2goal: ", q_2goal)
+        print("q_3: ", q_3)
+        print("q_3goal: ", q_3goal)
+
+
+
 
         ### CONVERT P1, P2, P3 and goals to "robot" coordinates (in pixels)
         p_1_robot_pixel     = convert_to_robot_pixel_coordinates(p_1)
@@ -350,6 +416,8 @@ bridge = CvBridge()
 
 # Initialize a subscriber to the "/camera/color/image_raw" topic
 sub_image = rospy.Subscriber("/camera/color/image_raw", Image, image_callback)
+
+cloud_sub = rospy.Subscriber("/camera/depth_registered/points", PointCloud2, cloud_callback)
 
 # Loop to keep the program from shutting down unless ROS is shut down, or CTRL+C is pressed
 while not rospy.is_shutdown():
