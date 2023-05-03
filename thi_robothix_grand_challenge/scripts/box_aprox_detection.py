@@ -312,13 +312,14 @@ def image_callback(img_msg):
         f    = 578.52294921875
         dist = 0.4
 
-        # get the 3d coordinate of p1 based on the g_point_cloud
+        ### convert to 2D coordinates (from camera frame) 
         q_1     = cartesian_from_pixel(p_1,     f, dist, c_x, c_y)
         q_1goal = cartesian_from_pixel(p_1goal, f, dist, c_x, c_y)
         q_2     = cartesian_from_pixel(p_2,     f, dist, c_x, c_y)
         q_2goal = cartesian_from_pixel(p_2goal, f, dist, c_x, c_y)
         q_3     = cartesian_from_pixel(p_3,     f, dist, c_x, c_y)
         q_3goal = cartesian_from_pixel(p_3goal, f, dist, c_x, c_y)
+
 
         ### FOR DEBUG
         q_button = cartesian_from_pixel(p_button, f, dist, c_x, c_y)
