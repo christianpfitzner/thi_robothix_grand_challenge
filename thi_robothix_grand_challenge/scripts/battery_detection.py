@@ -23,12 +23,6 @@ def normalize_vector(vector):
     return vector_norm
 
 
-def convert_to_robot_pixel_coordinates(p_xy_opencv):
-    output = np.array([p_xy_opencv[1], p_xy_opencv[0]])
-    
-    return output
-
-
 def determinate_battery_orientation(p_blue, p_gray):
     v_b2g       = p_gray - p_blue
     angle_b2g    = np.arctan2(v_b2g[1], v_b2g[0]) * (-1) # (*-1) bc OpenCV uses left-handed coordinates
@@ -227,8 +221,6 @@ def image_callback(img_msg):
         ### CALCULATE GRIP TARGET
         grip_target     = p_blue + vector_y * 10    # above the center
 
-        ### CONVERT "grip_target" to "robot" coordinates (in pixels)
-        grip_target_robot_pixel     = convert_to_robot_pixel_coordinates(grip_target)
 
         ### CONVERT PIXEL TO ROBOT COORDINATES [m]
 

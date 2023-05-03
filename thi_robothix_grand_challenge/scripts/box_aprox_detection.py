@@ -82,12 +82,6 @@ def get_P3_and_P3goal(p_button, vector_x, vector_y):
     return p_3, p_3goal, vector_y
 
 
-def convert_to_robot_pixel_coordinates(p_xy_opencv):
-    output = np.array([p_xy_opencv[1], p_xy_opencv[0]])
-    
-    return output
-
-
 def determinate_box_orientation(p_button, p_door):
     v_b2d       = p_door - p_button
     angle_bd    = np.arctan2(v_b2d[1], v_b2d[0]) * (-1) # (*-1) bc OpenCV uses left-handed coordinates
@@ -336,25 +330,6 @@ def image_callback(img_msg):
         # print("q_2goal: ", q_2goal)
         # print("q_3: ", q_3)
         # print("q_3goal: ", q_3goal)
-
-
-
-
-        ### CONVERT P1, P2, P3 and goals to "robot" coordinates (in pixels)
-        # p_1_robot_pixel     = convert_to_robot_pixel_coordinates(p_1)
-        # p_1goal_robot_pixel = convert_to_robot_pixel_coordinates(p_1goal)
-        # p_2_robot_pixel     = convert_to_robot_pixel_coordinates(p_2)
-        # p_2goal_robot_pixel = convert_to_robot_pixel_coordinates(p_2goal)
-        # p_3_robot_pixel     = convert_to_robot_pixel_coordinates(p_3)
-        # p_3goal_robot_pixel = convert_to_robot_pixel_coordinates(p_3goal)
-
-        ### FOR DEBUG
-        # print(p_1_robot_pixel)
-        # print(p_1goal_robot_pixel)
-        # print(p_2_robot_pixel)
-        # print(p_2goal_robot_pixel)
-        # print(p_3_robot_pixel)
-        # print(p_3goal_robot_pixel)
 
 
         ### VISUALIZE RESULTS
