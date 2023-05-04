@@ -95,82 +95,108 @@ void Task_A::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
 {
     gripper_interface.closeGripper();
     arm_interface.moveToFramePTP("box_button_blue",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFrameLinear("box_button_blue",0,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_blue",0.006,0,EE_LINKS::PANDA_HAND_BOTTOM);
     arm_interface.moveToFrameLinear("box_button_blue",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
-    gripper_interface.openGripper();
+    gripper_interface.setGripperWidth(0.035);
 }
 
 void Task_B::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     arm_interface.moveToFramePTP("box_slider_start",0.1,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
-    gripper_interface.setGripperWidth(0.008);
+    
     arm_interface.changeMaxVelocityScalingFactor(0.01);
     arm_interface.moveToFrameLinear("box_slider_start",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    gripper_interface.setGripperWidth_ABS(0.01);
 
-    arm_interface.moveToFramePTP("box_slider_1",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFramePTP("box_slider_middle",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFramePTP("box_slider_2",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFramePTP("box_slider_stop",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_slider_1",0.008,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_slider_middle",0.008,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_slider_2",0.008,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_slider_stop",0.008,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
 
-    arm_interface.moveToFramePTP("box_slider_2",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFramePTP("box_slider_middle",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFramePTP("box_slider_1",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFramePTP("box_slider_start",0.005,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_slider_2",0.008,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_slider_middle",0.008,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_slider_1",0.008,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFramePTP("box_slider_start",0.008,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM);
 
-    arm_interface.changeMaxVelocityScalingFactor(0.01);
+    //arm_interface.changeMaxVelocityScalingFactor(0.01);
     arm_interface.moveToFrameLinear("box_slider_start",0.1,M_PI/2,EE_LINKS::PANDA_HAND_BOTTOM); 
-    gripper_interface.openGripper();   
+    gripper_interface.setGripperWidth(0.035);
+    arm_interface.changeMaxVelocityScalingFactor(0.7);
+    //gripper_interface.openGripper();   
 }
 
 void Task_C::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     arm_interface.moveToFramePTP("box_socket_black", 0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
-    gripper_interface.setGripperWidth(0.04);
-    arm_interface.moveToFrameLinear("box_socket_black",0.005,0,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.changeMaxVelocityScalingFactor(0.01);
-    gripper_interface.closeGripper();
+    //gripper_interface.setGripperWidth(0.03);
+    // wait 1 sec
+    ros::Duration(1).sleep();
+    arm_interface.moveToFrameLinear("box_socket_black",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.changeMaxVelocityScalingFactor(0.4);
+    gripper_interface.setGripperWidth(0.01);
+    ros::Duration(1).sleep();
+
     arm_interface.moveToFrameLinear("box_socket_black", 0.05,0,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFramePTP("box_socket_red", 0.05,0,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFrameLinear("box_socket_red",0.005,0,EE_LINKS::PANDA_HAND_BOTTOM);
-    gripper_interface.setGripperWidth(0.02);
-    arm_interface.changeMaxVelocityScalingFactor(0.01);
-    arm_interface.moveToFrameLinear("box_socket_red", 0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_socket_red", 0.05,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_socket_red",0.04,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_socket_red",0.035,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_socket_red",0.03,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_socket_red",0.02,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_socket_red",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    // gripper_interface.setGripperWidth(0.035);
+    // //arm_interface.changeMaxVelocityScalingFactor(0.01);
+    // gripper_interface.setGripperWidth(0.0055);
     gripper_interface.openGripper();
+    ros::Duration(1).sleep();
+    arm_interface.moveToFrameLinear("box_socket_red", 0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
 }
 
 void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     //grip the probe and change tcp
-    gripper_interface.setGripperWidth(0.05);
-    arm_interface.moveToFramePTP("box_probe_gripping_point", 0.05);
-    arm_interface.moveToFrameLinear("box_probe_gripping_point");
-    gripper_interface.closeGripper();
+    //gripper_interface.setGripperWidth(0.05);
+    //arm_interface.moveToFramePTP("box_probe_gripping_point", 0.05);
+    //arm_interface.moveToFrameLinear("box_probe_gripping_point");
+    //gripper_interface.closeGripper();
     //tf tcp to probe
 
-    arm_interface.moveToFrameLinear("box_socket_grey", 0.02);
+    //arm_interface.moveToFrameLinear("box_socket_grey", 0.02);
 
     //open lid
-    arm_interface.moveToFrameLinear("box_lid_opening_pos_1", 0.05);
-    arm_interface.moveToFrameLinear("box_lid_opening_pos_1");
-    arm_interface.moveToFrameLinear("box_lid_opening_pos_2");
-    arm_interface.moveToFrameLinear("box_lid_opening_pos_3");
+    //arm_interface.moveToFrameLinear("box_lid_opening_pos_1", 0.05);
+    //arm_interface.moveToFrameLinear("box_lid_opening_pos_1");
+    //arm_interface.moveToFrameLinear("box_lid_opening_pos_2");
+    //arm_interface.moveToFrameLinear("box_lid_opening_pos_3");
 
     //make a measurment
-    arm_interface.moveToFramePTP("box_measuring_point_1",0.05);
-    arm_interface.moveToFrameLinear("box_measuring_point_1");
-    arm_interface.moveToFrameLinear("box_measuring_point_1",0.05);
+    //arm_interface.moveToFramePTP("box_measuring_point_1",0.05);
+    //arm_interface.moveToFrameLinear("box_measuring_point_1");
+    //arm_interface.moveToFrameLinear("box_measuring_point_1",0.05);
 }
 
 void Task_E::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
-    
+    arm_interface.moveToFramePTP("box_cable_wrapping_pos_1",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_cable_wrapping_pos_1",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_cable_wrapping_pos_2",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_cable_wrapping_pos_3",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+
+    gripper_interface.closeGripper();
+
+    arm_interface.moveToFrameLinear("box_cable_wrapping_pos_4",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_cable_wrapping_pos_5",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_cable_wrapping_pos_6",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_cable_wrapping_pos_7",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_cable_wrapping_pos_8",0.01,0,EE_LINKS::PANDA_HAND_BOTTOM);
+
+    gripper_interface.openGripper();
 }
 
 void Task_F::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& gripper_interface, std::shared_ptr<ros::NodeHandle> nh)
 {
     gripper_interface.closeGripper();
     arm_interface.moveToFramePTP("box_button_red",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
-    arm_interface.moveToFrameLinear("box_button_red",0,0,EE_LINKS::PANDA_HAND_BOTTOM);
+    arm_interface.moveToFrameLinear("box_button_red",0.006,0,EE_LINKS::PANDA_HAND_BOTTOM);
     arm_interface.moveToFrameLinear("box_button_red",0.1,0,EE_LINKS::PANDA_HAND_BOTTOM);
     gripper_interface.openGripper();
 }
@@ -186,7 +212,7 @@ int main(int argc, char **argv)
 
     std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools = std::make_shared<moveit_visual_tools::MoveItVisualTools>("panda_link0");
 
-    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 0.01, 0.01, visual_tools);
+    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 0.5, 0.5, visual_tools);
     MoveItGripperInterface gripper_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 0.5, 0.3, 0.1);
 
 /* 
@@ -230,10 +256,13 @@ int main(int argc, char **argv)
   │ Run Tasks                                                                   │
   └─────────────────────────────────────────────────────────────────────────────┘
 */
-    for(auto &&task : tasks)
+    while(1)
     {
-        ROS_WARN_STREAM("Trying to run task " << task->_task_name);
-        task->run(arm_interface, gripper_interface, std::make_shared<ros::NodeHandle>(nh));
+        for(auto &&task : tasks)
+        {
+            ROS_WARN_STREAM("Trying to run task " << task->_task_name);
+            task->run(arm_interface, gripper_interface, std::make_shared<ros::NodeHandle>(nh));
+        }
     }
 
 /* 
