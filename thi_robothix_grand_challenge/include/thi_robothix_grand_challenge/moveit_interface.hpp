@@ -18,6 +18,9 @@
 #include <string>
 #include <stdexcept>
 #include "geometry_msgs/TransformStamped.h"
+#include "franka_gripper/GraspAction.h"
+#include <actionlib/client/simple_action_client.h>
+#include <actionlib/client/terminal_state.h>
 
 // include franka gripper gripper action
 #include <franka_gripper/GraspAction.h>
@@ -214,9 +217,7 @@ public:
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
-
-        // initialize gripper action
-        gripper_action_client_ = std::make_shared<actionlib::SimpleActionClient<franka_gripper::GraspAction>>("/franka_gripper/grasp", true);
+        
     };
 
     void closeGripper()
@@ -263,7 +264,9 @@ public:
             mgi_->move();
     }
 
+
 private:
+
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
     moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper_;
     std::shared_ptr<actionlib::SimpleActionClient<franka_gripper::GraspAction>> gripper_action_client_;
