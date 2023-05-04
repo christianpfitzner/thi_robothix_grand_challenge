@@ -13,8 +13,8 @@
 
     <!-- only for testing purposes. needs to be exchanged with camera based recognition node -->
     <!-- start box_position_publisher with 10s delay -->
-    <param name="/box_position_point/p1" value="0.408 0.0825 0.004"/>
-    <param name="/box_position_point/p2" value="0.461 0.0825 0.004"/>
+    <param name="/box_position_point/p1" value="0.408 0.0840 0.004"/>
+    <param name="/box_position_point/p2" value="0.461 0.0840 0.004"/>
     <param name="/box_position_point/p3" value="0.3665 0.221 0.004"/>
     <node name="box_position_publisher" pkg="box_position_publisher" type="box_position_publisher_node.py" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@' "/>
 
