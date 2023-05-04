@@ -18,6 +18,9 @@
 #include <string>
 #include <stdexcept>
 #include "geometry_msgs/TransformStamped.h"
+#include "franka_gripper/GraspAction.h"
+#include <actionlib/client/simple_action_client.h>
+#include <actionlib/client/terminal_state.h>
 
 #define DEBUG_VISUALIZATION false
 
@@ -225,6 +228,7 @@ public:
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
+        ac.waitForServer();
     };
 
     void closeGripper()
@@ -256,7 +260,27 @@ public:
             mgi_->move();
     }
 
+    void setGripperWidthWithEffort(double width)
+    {
+        franka_gripper::GraspGoal grasp_action; 
+        grasp_action.width = width; 
+        grasp_action.speed = 1.0; 
+        grasp_action.force = 6; 
+        grasp_action.epsilon.inner = 0.01;  // Maximum tolerated deviation when the actual grasped width is
+        grasp_action.epsilon.outer = 0.01;
+
+        ac.sendGoal(grasp_action); 
+
+        ac.waitForResult(ros::Duration(4.0)); 
+        if(ac.getResult()->success)
+        {
+            ROS_ERROR_STREAM("yeah!!!!");
+        }
+    }
+
 private:
+
+    actionlib::SimpleActionClient<franka_gripper::GraspAction> ac("franka_gripper/grasp", true);
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
     moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper_;
 };
