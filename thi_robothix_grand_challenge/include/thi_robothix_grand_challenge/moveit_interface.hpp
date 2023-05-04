@@ -19,6 +19,9 @@
 #include <stdexcept>
 #include "geometry_msgs/TransformStamped.h"
 
+// include franka gripper gripper action
+#include <franka_gripper/GraspAction.h>
+
 #define DEBUG_VISUALIZATION false
 
 enum class EE_LINKS {PANDA_HAND_TCP, PANDA_HAND_BOTTOM, PANDA_PROBE};
@@ -172,6 +175,7 @@ class MoveItArmInterface
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, false);
         ROS_WARN_STREAM("Planning Frame: " << mgi_->getPlanningFrame());
         mgi_->execute(trajectory);
+        // mgi_->
 
     }
 
@@ -211,6 +215,10 @@ public:
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
+
+
+        // initialize gripper action
+        gripper_action_client_ = std::make_shared<actionlib::SimpleActionClient<franka_gripper::GraspAction>>("/franka_gripper/grasp", true);
     };
 
     void closeGripper()
@@ -231,6 +239,21 @@ public:
 
     void setGripperWidth(double width)
     {
+        franka_gripper::GraspGoal goal;
+        goal.width = width;
+        goal.force = 4;
+        goal.speed = 1.0;
+        goal.epsilon.inner = 0.01;
+        goal.epsilon.outer = 0.01;
+        gripper_action_client_->sendGoal(goal);
+        gripper_action_client_->waitForResult(ros::Duration(5.0));
+
+
+        
+    }
+
+    void setGripperWidth_ABS(double width)
+    {
         std::vector<double> finger_width;
         finger_width.resize(2);
         finger_width[0] = width;
@@ -245,6 +268,7 @@ public:
 private:
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> mgi_;
     moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper_;
+    std::shared_ptr<actionlib::SimpleActionClient<franka_gripper::GraspAction>> gripper_action_client_;
 };
 
 #endif
