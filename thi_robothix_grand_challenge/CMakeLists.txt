@@ -25,6 +25,7 @@ find_package(catkin REQUIRED
     std_msgs
     sensor_msgs
     cv_bridge
+    franka_gripper
 )
 
 find_package(Eigen3 REQUIRED)
@@ -47,6 +48,7 @@ catkin_package(
     std_msgs
     sensor_msgs
     geometry_msgs
+    franka_gripper
   DEPENDS
     EIGEN3
 )

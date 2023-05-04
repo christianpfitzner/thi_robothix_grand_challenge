@@ -70,13 +70,13 @@
   <build_depend>tf2_convert</build_depend>
   <build_depend>actionlib_msgs</build_depend>
   <build_depend>control_msgs</build_depend>
+  <build_depend>franka_gripper</build_depend>
   <depend>rospy</depend>
   <depend>std_srvs</depend>
   <depend>cv_bridge</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
-
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>moveit_core</exec_depend>
   <exec_depend>moveit_commander</exec_depend>
@@ -103,6 +103,7 @@
   <exec_depend>actionlib_msgs</exec_depend>
   <exec_depend>control_msgs</exec_depend>
   <exec_depend>message_generation</exec_depend>
+  <exec_depend>franka_gripper</exec_depend>
   
   <!-- The export tag contains other, unspecified, tags -->
   <export>
@@ -110,3 +111,4 @@
 
   </export>
 </package>
+ 
