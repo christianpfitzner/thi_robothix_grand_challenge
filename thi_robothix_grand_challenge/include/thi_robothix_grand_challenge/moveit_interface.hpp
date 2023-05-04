@@ -175,7 +175,6 @@ class MoveItArmInterface
         double fraction = mgi_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, false);
         ROS_WARN_STREAM("Planning Frame: " << mgi_->getPlanningFrame());
         mgi_->execute(trajectory);
-        // mgi_->
 
     }
 
@@ -215,7 +214,6 @@ public:
         mgi_->setPlanningTime(planning_time);
         mgi_->setMaxVelocityScalingFactor(max_vel_scale_factor);
         mgi_->setMaxAccelerationScalingFactor(max_acc_scale_factor);
-
 
         // initialize gripper action
         gripper_action_client_ = std::make_shared<actionlib::SimpleActionClient<franka_gripper::GraspAction>>("/franka_gripper/grasp", true);
