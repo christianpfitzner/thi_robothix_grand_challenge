@@ -2,6 +2,19 @@
 
     <arg name="task_order"/>
 
+    <!-- camera -->
+    <!-- The rpy in the comment uses the extrinsic XYZ convention, which is the same as is used in a URDF. See
+         http://wiki.ros.org/geometry2/RotationMethods and https://en.wikipedia.org/wiki/Euler_angles for more info. -->
+    <!-- xyz="0.0365453 -0.00543092 -0.0412897" rpy="0.0267457 -0.00142541 -1.56151" -->
+    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="camera_link_broadcaster"
+        args="0.0365453 -0.00543092 -0.0412897   0.0100011 0.00890551 -0.703761 0.71031 panda_hand_tcp head_camera" /> -->
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="camera_link_broadcaster"
+        args="0.0365453 -0.00543092 -0.0412897 -1.57 0 0 panda_hand_tcp head_camera" />
+    <param name="instrinsic_controls" type="yaml" command=" cat '$(find thi_robothix_grand_challenge_2023)/config/usb_cam.yaml' "/> 
+    <node pkg="usb_cam" type="usb_cam_node" name="usb_cam_node"/>
+
+
     <!-- set parameters and custom transforms -->
     <include file="$(find thi_robothix_grand_challenge_2023)/launch/meta.launch"/>
 
@@ -20,6 +33,7 @@
 
     <!-- start thi_robothix_grand_challenge_node with 10s delay -->
     <param name="task_order" value="$(arg task_order)"/>
-    <node name="thi_robothix_main" pkg="thi_robothix_grand_challenge_2023" type="thi_robothix_grand_challenge_node" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@' "/>
- 
+    <!-- <node name="thi_robothix_main" pkg="thi_robothix_grand_challenge_2023" type="thi_robothix_grand_challenge_node" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@' "/> -->
+    <node name="thi_robothix_main" pkg="thi_robothix_grand_challenge_2023" type="thi_robothix_grch_diy_node"/>
+
 </launch>
