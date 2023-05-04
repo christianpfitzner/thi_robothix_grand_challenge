@@ -132,7 +132,7 @@
   <parent link="box_corner_3"/>
   <child link="box_slider_start"/>
   <!--Original x:-0.0425  y: -0.0675-->
-  <origin rpy="0 ${pi} ${pi}" xyz="-0.021 -0.0675 ${box_len_z}"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.025 -0.0675 ${box_len_z}"/>
 </joint>
 <link name="box_slider_start">
   <visual>
@@ -162,7 +162,7 @@
 <joint name="box_slider_joint_stop" type="fixed">
   <parent link="box_corner_3"/>
   <child link="box_slider_stop"/>
-  <origin rpy="0 ${pi} ${pi}" xyz="-0.064 -0.0675 ${box_len_z}"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.06 -0.0675 ${box_len_z}"/>
 </joint>
 <link name="box_slider_stop">
   <visual>
@@ -206,7 +206,7 @@
 <joint name="box_socket_red_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_socket_red"/>
-  <origin rpy="0 ${pi} ${pi}" xyz="0.0589 -0.0895 ${box_len_z}"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="0.057 -0.085 ${box_len_z}"/>
 </joint>
 <link name="box_socket_red">
   <visual>
@@ -223,7 +223,7 @@
 <joint name="box_socket_black_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_socket_black"/>
-  <origin rpy="0 ${pi} ${pi}" xyz="0.034 -0.0895 ${box_len_z}"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="0.0325 -0.087 ${box_len_z}"/>
 </joint>
 <link name="box_socket_black">
   <visual>
