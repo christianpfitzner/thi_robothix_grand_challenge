@@ -58,16 +58,16 @@ if __name__ == "__main__":
     rospy.init_node('box_position_publisher_node')
 
     # get points from parameter server
-    p1 = rospy.get_param("/box_position_publisher/p1")
-    p2 = rospy.get_param("/box_position_publisher/p2")
-    p3 = rospy.get_param("/box_position_publisher/p3")
+    p1 = rospy.get_param("/box_position_point/p1")
+    p2 = rospy.get_param("/box_position_point/p2")
+    p3 = rospy.get_param("/box_position_point/p3")
 
     # split strings into numpy arrays
     p1 = np.fromstring(p1, dtype=float, sep=' ')
     p2 = np.fromstring(p2, dtype=float, sep=' ')
     p3 = np.fromstring(p3, dtype=float, sep=' ')
 
-    rospy.loginfo("Origin: ", calc_origin(p1, p2, p3))
+    # rospy.loginfo("Origin: ", calc_origin(p1, p2, p3))
 
     # Create a message
     msg = PoseStamped()

@@ -173,6 +173,34 @@
   </visual>
 </link>
 
+<joint name="box_slider_joint_1" type="fixed">
+  <parent link="box_corner_3"/>
+  <child link="box_slider_1"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.03175 -0.0675 ${box_len_z}"/>
+</joint>
+<link name="box_slider_1">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0.005"/>
+    <geometry>
+      <box size="0.007 0.005796 0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="box_slider_joint_2" type="fixed">
+  <parent link="box_corner_3"/>
+  <child link="box_slider_2"/>
+  <origin rpy="0 ${pi} ${pi}" xyz="-0.05325 -0.0675 ${box_len_z}"/>
+</joint>
+<link name="box_slider_2">
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0.005"/>
+    <geometry>
+      <box size="0.007 0.005796 0.01"/>
+    </geometry>
+  </visual>
+</link>
+
 <!-- Sockets -->
 
 <joint name="box_socket_red_joint" type="fixed">
@@ -367,52 +395,65 @@
 <joint name="box_cable_wrapping_pos_1_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_cable_wrapping_pos_1"/>
-  <origin rpy="0 ${pi} ${pi}" xyz="0.0269 -0.0895 ${box_len_z + 0.005}"/>
+  <origin rpy="-3.134 -0.396 -0.005" xyz="0.025 -0.079 0.09"/>
 </joint>
 <link name="box_cable_wrapping_pos_1">
-  <visual>
-    <origin rpy="0 0 0" xyz="0 0 0.001"/>
-    <geometry>
-      <cylinder radius="0.007" length="0.002"/>
-    </geometry>
-    <material name="red">
-      <color rgba="1 0 0 1"/>
-    </material>
-  </visual>
 </link>
 
 <joint name="box_cable_wrapping_pos_2_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_cable_wrapping_pos_2"/>
-  <origin rpy="0 ${pi} ${pi}" xyz="-0.02 -0.0895 ${box_len_z + 0.005}"/>
+  <origin rpy="-3.134 -0.396 -0.005" xyz="-0.021 -0.095 0.09"/>
 </joint>
 <link name="box_cable_wrapping_pos_2">
-  <visual>
-    <origin rpy="0 0 0" xyz="0 0 0.001"/>
-    <geometry>
-      <cylinder radius="0.007" length="0.002"/>
-    </geometry>
-    <material name="red">
-      <color rgba="1 0 0 1"/>
-    </material>
-  </visual>
 </link>
 
 <joint name="box_cable_wrapping_pos_3_joint" type="fixed">
   <parent link="box_corner_2"/>
   <child link="box_cable_wrapping_pos_3"/>
-  <origin rpy="0 ${pi*(3/4)} ${pi}" xyz="-0.05 -0.0895 ${box_len_z - 0.02}"/>
+  <origin rpy="-3.134 -0.597 0.029" xyz="-0.021 -0.095 0.08"/>
 </joint>
 <link name="box_cable_wrapping_pos_3">
-  <visual>
-    <origin rpy="0 0 0" xyz="0 0 0.001"/>
-    <geometry>
-      <cylinder radius="0.007" length="0.002"/>
-    </geometry>
-    <material name="red">
-      <color rgba="1 0 0 1"/>
-    </material>
-  </visual>
+</link>
+
+<joint name="box_cable_wrapping_pos_4_joint" type="fixed">
+  <parent link="box_corner_2"/>
+  <child link="box_cable_wrapping_pos_4"/>
+  <origin rpy="-3.134 -0.597 0.029" xyz="-0.051 -0.095 0.064"/>
+</joint>
+<link name="box_cable_wrapping_pos_4">
+</link>
+
+<joint name="box_cable_wrapping_pos_5_joint" type="fixed">
+  <parent link="box_corner_2"/>
+  <child link="box_cable_wrapping_pos_5"/>
+  <origin rpy="-3.134 -0.597 0.029" xyz="-0.045 0.028 0.064"/>
+</joint>
+<link name="box_cable_wrapping_pos_5">
+</link>
+
+<joint name="box_cable_wrapping_pos_6_joint" type="fixed">
+  <parent link="box_corner_2"/>
+  <child link="box_cable_wrapping_pos_6"/>
+  <origin rpy="-3.134 -0.597 0.029" xyz="-0.009 0.003 0.118"/>
+</joint>
+<link name="box_cable_wrapping_pos_6">
+</link>
+
+<joint name="box_cable_wrapping_pos_7_joint" type="fixed">
+  <parent link="box_corner_2"/>
+  <child link="box_cable_wrapping_pos_7"/>
+  <origin rpy="3.108 -0.606 0.141" xyz="-0.004 -0.230 0.105"/>
+</joint>
+<link name="box_cable_wrapping_pos_7">
+</link>
+
+<joint name="box_cable_wrapping_pos_8_joint" type="fixed">
+  <parent link="box_corner_2"/>
+  <child link="box_cable_wrapping_pos_8"/>
+  <origin rpy="-3.134 -0.415 0.049" xyz="-0.044 -0.23 0.077"/>
+</joint>
+<link name="box_cable_wrapping_pos_8">
 </link>
 
 </robot>
