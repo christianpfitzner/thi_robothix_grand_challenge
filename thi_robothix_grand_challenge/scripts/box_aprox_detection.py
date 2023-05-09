@@ -28,25 +28,19 @@ import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
 
-# import package for point cloud 
-from sensor_msgs.msg import PointCloud2
-import sensor_msgs.point_cloud2 as pc2
+# # import package for point cloud 
+# from sensor_msgs.msg import PointCloud2
+# import sensor_msgs.point_cloud2 as pc2
 
 
 
-g_point_cloud = None
+# g_point_cloud = None
 
-# add subscriber for point cloud
-def cloud_callback(data):
-    global g_point_cloud
+# # add subscriber for point cloud
+# def cloud_callback(data):
+#     global g_point_cloud
     
-    g_point_cloud = data
-
-
-
-
-
-
+#     g_point_cloud = data
 
 
 
@@ -65,33 +59,27 @@ def normalize_vector(vector):
 
 
 def get_P1_and_P1goal(p_button, vector_x, vector_y):
-    p_1         = p_button + vector_y * (180)
-    p_1         = p_1 + vector_x * (-180)
+    p_1         = p_button + vector_y * (220)
+    p_1         = p_1 + vector_x * (-210)
     p_1goal     = p_1 + vector_x * (100)
 
     return p_1, p_1goal, vector_x
 
 
 def get_P2_and_P2goal(p_button, vector_x, vector_y):
-    p_2         = p_button + vector_y * (30)
-    p_2         = p_2 + vector_x * (-180)
+    p_2         = p_button + vector_y * (20)
+    p_2         = p_2 + vector_x * (-210)
     p_2goal     = p_2 + vector_x * (100)
 
     return p_2, p_2goal, vector_x
 
 
 def get_P3_and_P3goal(p_button, vector_x, vector_y):
-    p_3         = p_button + vector_x * (-30)
-    p_3         = p_3 + vector_y * (-100)
+    p_3         = p_button + vector_x * (-20)
+    p_3         = p_3 + vector_y * (-90)
     p_3goal     = p_3 + vector_y * (100)
 
     return p_3, p_3goal, vector_y
-
-
-def convert_to_robot_pixel_coordinates(p_xy_opencv):
-    output = np.array([p_xy_opencv[1], p_xy_opencv[0]])
-    
-    return output
 
 
 def determinate_box_orientation(p_button, p_door):
@@ -269,8 +257,6 @@ def draw_line(img, start, end, color):
 
 
 
-
-
 # get_3d_coordinate function definition 
 # def pixelTo3DPoint(cloud, u, v):
 #     data_np = ros_numpy.numpify(cloud)
@@ -281,7 +267,7 @@ def cartesian_from_pixel(pixel, focal, dist, c_x, c_y):
     x = (pixel[0] - c_x) * dist  / focal
     y = (pixel[1] - c_y) * dist  / focal
 
-    return x,y
+    return x, y
 
 def image_callback(img_msg):
     ### Convert ROS Image message to a CV2 Image
@@ -318,12 +304,15 @@ def image_callback(img_msg):
         p_3, p_3goal, v_3 = get_P3_and_P3goal(p_button, vector_x, vector_y)
 
 
+
+
+        ### from u[pixel] & v[pixel] to x_camera[m] & y_camera[m]
         c_x  = 327.1772766113281
         c_y  = 243.1417541503906
         f    = 578.52294921875
         dist = 0.4
 
-        # get the 3d coordinate of p1 based on the g_point_cloud
+        ### convert to 2D coordinates (from camera frame) 
         q_1     = cartesian_from_pixel(p_1,     f, dist, c_x, c_y)
         q_1goal = cartesian_from_pixel(p_1goal, f, dist, c_x, c_y)
         q_2     = cartesian_from_pixel(p_2,     f, dist, c_x, c_y)
@@ -332,40 +321,22 @@ def image_callback(img_msg):
         q_3goal = cartesian_from_pixel(p_3goal, f, dist, c_x, c_y)
 
 
+        ### FOR DEBUG
         q_button = cartesian_from_pixel(p_button, f, dist, c_x, c_y)
-
         print("q_button: ", q_button)
 
-        print("q_1: ", q_1)
-        print("q_1goal: ", q_1goal)
-        print("q_2: ", q_2)
-        print("q_2goal: ", q_2goal)
-        print("q_3: ", q_3)
-        print("q_3goal: ", q_3goal)
-
-
-
-
-        ### CONVERT P1, P2, P3 and goals to "robot" coordinates (in pixels)
-        p_1_robot_pixel     = convert_to_robot_pixel_coordinates(p_1)
-        p_1goal_robot_pixel = convert_to_robot_pixel_coordinates(p_1goal)
-        p_2_robot_pixel     = convert_to_robot_pixel_coordinates(p_2)
-        p_2goal_robot_pixel = convert_to_robot_pixel_coordinates(p_2goal)
-        p_3_robot_pixel     = convert_to_robot_pixel_coordinates(p_3)
-        p_3goal_robot_pixel = convert_to_robot_pixel_coordinates(p_3goal)
-
-        ### FOR DEBUG
-        # print(p_1_robot_pixel)
-        # print(p_1goal_robot_pixel)
-        # print(p_2_robot_pixel)
-        # print(p_2goal_robot_pixel)
-        # print(p_3_robot_pixel)
-        # print(p_3goal_robot_pixel)
+        # print("q_1: ", q_1)
+        # print("q_1goal: ", q_1goal)
+        # print("q_2: ", q_2)
+        # print("q_2goal: ", q_2goal)
+        # print("q_3: ", q_3)
+        # print("q_3goal: ", q_3goal)
 
 
         ### VISUALIZE RESULTS
-        i_targets_bw    = cv2.bitwise_or(i_door, i_button)
-        i_viz           = cv2.cvtColor(i_targets_bw, cv2.COLOR_GRAY2BGR)
+        # i_targets_bw    = cv2.bitwise_or(i_door, i_button)
+        # i_viz           = cv2.cvtColor(i_targets_bw, cv2.COLOR_GRAY2BGR)
+        i_viz  = cv_image
         # axis
         x_axis = p_button + vector_x * (45)     # to visualize results, not needed
         y_axis = p_button + vector_y * (45)     # to visualize results, not needed
@@ -392,11 +363,14 @@ def image_callback(img_msg):
         # Robot Coordinates
         i_viz = cv2.line(i_viz, (3, 3), (3, 240), (0, 0, 255), 5, 8)    # x-axis, red
         i_viz = cv2.line(i_viz, (3, 3), (340, 3), (0, 255, 0), 5, 8)    # y-axis, green
-        i_viz = cv2.putText(i_viz, 'x', (10, 240), font, 1, (255, 255, 255), 1, cv2.LINE_AA)
-        i_viz = cv2.putText(i_viz, 'y', (340, 25), font, 1, (255, 255, 255), 1, cv2.LINE_AA)
+        i_viz = cv2.putText(i_viz, 'x_robot', (10, 240), font, 1, (255, 255, 255), 1, cv2.LINE_AA)
+        i_viz = cv2.putText(i_viz, 'y_robot', (340, 25), font, 1, (255, 255, 255), 1, cv2.LINE_AA)
         i_viz = cv2.putText(i_viz, 'P1', (int(p_1[0])-15, int(p_1[1])-15), font, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
         i_viz = cv2.putText(i_viz, 'P2', (int(p_2[0])-15, int(p_2[1])-15), font, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
         i_viz = cv2.putText(i_viz, 'P3', (int(p_3[0])-15, int(p_3[1])-15), font, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+        i_viz = cv2.putText(i_viz, 'P1_goal', (int(p_1goal[0])-15, int(p_1goal[1])-15), font, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+        i_viz = cv2.putText(i_viz, 'P2_goal', (int(p_2goal[0])-15, int(p_2goal[1])-15), font, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+        i_viz = cv2.putText(i_viz, 'P3_goal', (int(p_3goal[0])-15, int(p_3goal[1])-15), font, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.imshow("Visualization box_aprox_detection", i_viz)
 
         print("DONE, unsuscribed from image topic")
@@ -417,7 +391,7 @@ bridge = CvBridge()
 # Initialize a subscriber to the "/camera/color/image_raw" topic
 sub_image = rospy.Subscriber("/camera/color/image_raw", Image, image_callback)
 
-cloud_sub = rospy.Subscriber("/camera/depth_registered/points", PointCloud2, cloud_callback)
+# cloud_sub = rospy.Subscriber("/camera/depth_registered/points", PointCloud2, cloud_callback)
 
 # Loop to keep the program from shutting down unless ROS is shut down, or CTRL+C is pressed
 while not rospy.is_shutdown():
