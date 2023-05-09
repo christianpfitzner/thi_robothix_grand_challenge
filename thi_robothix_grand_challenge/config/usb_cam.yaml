@@ -1,0 +1,24 @@
+             
+focus_auto: true
+exposure_auto_priority: true
+exposure_auto: 3
+white_balance_temperature_auto: true
+power_line_frequency: 1
+ignore: [
+    brightness,
+    contrast,
+    saturation,
+    gain,
+    sharpness,
+    backlight_compensation,
+    white_balance_temperature,
+    exposure_absolute,
+    pan_absolute,
+    tilt_absolute,
+    focus_absolute,
+    zoom_absolute
+]                               # Use this list to enumerate the control names that should be delisted from the camera setup
+                                # NOTE: the ROS parameters for the V4L controls supported but listed here would be STILL
+                                # generated, but the values WILL NOT BE USED to set up the camera. To affect these controls
+                                # once you want to do that, their names should me REMOVED from this list!
+
