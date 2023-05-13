@@ -136,6 +136,7 @@ void Task_D::run(MoveItArmInterface& arm_interface, MoveItGripperInterface& grip
     //grip the probe and change tcp
     gripper_interface.setGripperWidth(0.05);
     arm_interface.moveToFramePTP("box_probe_gripping_point", 0.05);
+    ros::Duration(1).sleep();
     arm_interface.moveToFrameLinear("box_probe_gripping_point");
     gripper_interface.closeGripper();
 
@@ -179,9 +180,11 @@ int main(int argc, char **argv)
 
     std::shared_ptr<moveit_visual_tools::MoveItVisualTools> visual_tools = std::make_shared<moveit_visual_tools::MoveItVisualTools>("panda_link0");
 
-    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 0.5, 0, visual_tools);
+    MoveItArmInterface arm_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_arm"), 0.5, 0.5, 0.1, visual_tools);
     MoveItGripperInterface gripper_interface(std::make_unique<moveit::planning_interface::MoveGroupInterface>("panda_hand"), 0.5, 0.3, 0.1);
 
+
+    ros::Duration(10).sleep();
 /* 
   ┌─────────────────────────────────────────────────────────────────────────────┐
   │ Create Tasks                                                                │
